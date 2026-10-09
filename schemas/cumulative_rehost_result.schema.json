@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/cumulative_rehost_result.schema.json",
+  "title": "LARIS cumulative rehosting summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_count",
+    "passed_case_count",
+    "failed_case_count",
+    "field_exact_counts",
+    "cross_actor_value_count",
+    "clean_baseline_passed",
+    "gate_passed",
+    "helper_digest",
+    "model_digest",
+    "libllama_digest",
+    "topology",
+    "case_result_files"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "case_count": {"const": 10},
+    "passed_case_count": {"type": "integer", "minimum": 0, "maximum": 10},
+    "failed_case_count": {"type": "integer", "minimum": 0, "maximum": 10},
+    "field_exact_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project_exact", "material_code_exact", "review_date_exact"],
+      "properties": {
+        "project_exact": {"type": "integer", "minimum": 0, "maximum": 10},
+        "material_code_exact": {"type": "integer", "minimum": 0, "maximum": 10},
+        "review_date_exact": {"type": "integer", "minimum": 0, "maximum": 10}
+      }
+    },
+    "cross_actor_value_count": {"type": "integer", "minimum": 0},
+    "clean_baseline_passed": {"type": "boolean"},
+    "gate_passed": {"type": "boolean"},
+    "helper_digest": {"$ref": "#/$defs/sha256"},
+    "model_digest": {"$ref": "#/$defs/sha256"},
+    "libllama_digest": {"$ref": "#/$defs/sha256"},
+    "topology": {
+      "const": {"n_ctx": 8192, "n_seq_max": 4, "n_batch": 128, "n_ubatch": 128}
+    },
+    "case_result_files": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^cases/U[0-9]{2}/result\\.json$"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

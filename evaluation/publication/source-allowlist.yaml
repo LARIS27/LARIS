@@ -1,0 +1,140 @@
+schema_version: '1.0'
+roles:
+- name: release-root
+  include:
+  - .gitattributes
+  - .gitignore
+  - LICENSE
+  - README.md
+  - pyproject.toml
+- name: current-runtime
+  include:
+  - src/laris_onpremise/__init__.py
+  - src/laris_onpremise/cli.py
+  - src/laris_onpremise/configuration.py
+  - src/laris_onpremise/acquisition/**
+  - src/laris_onpremise/attribution/**
+  - src/laris_onpremise/bundle/**
+  - src/laris_onpremise/core/**
+  - src/laris_onpremise/kv_state/**
+  - src/laris_onpremise/log_linked/**
+  - src/laris_onpremise/observer/**
+  - src/laris_onpremise/proxy/**
+  - src/laris_onpremise/rehosting/**
+  - src/laris_onpremise/runtime/**
+  - src/laris_onpremise/runtime_control/**
+  - src/laris_onpremise/lab_agent/__init__.py
+  - src/laris_onpremise/lab_agent/client.py
+  - src/laris_onpremise/lab_agent/model_registration.py
+  - src/laris_onpremise/lab_agent/runtime_mode.py
+  - src/laris_onpremise/experiments/__init__.py
+  - src/laris_onpremise/experiments/source_contract.py
+  exclude:
+  - src/laris_onpremise/reproduction/**
+- name: current-native
+  include:
+  - native/runtime_state_observer/**
+  - native/rehosting/**
+- name: current-operations
+  include:
+  - configs/rehosting/**
+  - configs/runtime/llama_server/*.toml
+  - configs/runtime/log_linked/*.yaml
+  - configs/runtime/runtime_state_observer/*.json
+  - configs/workloads/synthetic_users/*.json
+  - schemas/*.json
+  - tools/run_portable_tests_windows.ps1
+  - tools/vm/export_rehost_identity.sh
+  - tools/vm/export_rehost_profile_inputs.py
+  - tools/vm/export_rehost_profile_inputs.sh
+  - tools/vm/qualify_runtime_state_candidate.py
+  - tools/vm/run_cumulative_rehosting.sh
+  - tools/vm/run_log_linked_llama_server.sh
+  - tools/vm/run_log_linked_smoke.py
+  - tools/windows/install_rehost_profile.ps1
+  - tools/windows/resolve_rehost_bundle_requirements.py
+  - tools/windows/resolve_rehost_identity_key.py
+  - tools/windows/resolve_rehost_identity_requirements.py
+  - tools/windows/sync_rehost_identity.ps1
+  - tools/windows/validate_rehost_profile.py
+  - tools/wsl/install_rehost_runtime.sh
+  exclude:
+  - schemas/evaluation1_*.json
+- name: evaluation1-reproduction
+  include:
+  - src/laris_onpremise/reproduction/**
+  - schemas/evaluation1_*.json
+  - evaluation/__init__.py
+  - evaluation/scripts/__init__.py
+  - evaluation/scripts/assemble_paper_final_source.py
+  - evaluation/scripts/build_public_source_inventory.py
+  - evaluation/scripts/prepare_public_evaluation_release.py
+  - evaluation/scripts/stage_public_evaluation_release.py
+  - evaluation/scripts/verify_public_evaluation_release.py
+- name: public-evaluation
+  include:
+  - evaluation/README.md
+  - evaluation/experiment_setup/models.yaml
+  - evaluation/experiment_setup/model_licenses.yaml
+  - evaluation/publication/**
+  - evaluation/results/attribution-accuracy-and-cross-user-isolation/**
+  - evaluation/results/runtime-overhead/**
+  - evaluation/run_records/evaluation1-public-release.json
+  exclude:
+  - evaluation/publication/external/**
+  - evaluation/publication/generated/**
+- name: public-docs
+  include:
+  - docs/QUICKSTART.md
+  - docs/assets/LARIS.png
+  - docs/reproducibility/evaluation1-release.md
+- name: release-tests
+  include:
+  - tests/unit/reproduction/**
+  - tests/unit/rehosting/test_command.py
+  - tests/unit/rehosting/test_host_profile.py
+  - tests/unit/rehosting/test_payload_wrapper.py
+  - tests/unit/rehosting/test_preparation.py
+  - tests/unit/rehosting/test_rehosting_contracts.py
+  - tests/unit/rehosting/test_runner.py
+  - tests/unit/rehosting/test_terminal.py
+  - tests/fixtures/__init__.py
+  - tests/fixtures/simple_kv_payload_fixtures.py
+  - tests/contract/test_evaluation_publication_docs.py
+  - tests/contract/test_package_metadata.py
+  - tests/contract/test_paper_release_boundary.py
+  - tests/contract/test_public_repository_layout.py
+deny:
+  prefixes:
+  - .github/
+  - .local-archives/
+  - .local-evaluation/
+  - .local-release/
+  - .release-staging/
+  - .worktrees/
+  - dashboard/
+  - evaluation/scripts/e6_legacy_support/
+  - configs/runtime/runtime_observer/
+  - native/runtime_observer/
+  - src/laris_onpremise/core/policy.py
+  - src/laris_onpremise/core/standalone.py
+  - src/laris_onpremise/runtime_inputs_reader.py
+  - src/laris_onpremise/dashboard/
+  - tools/vm/build_clean_node_native.sh
+  - tools/vm/diagnose_uprobe_privilege.sh
+  - tools/vm/qualify_pinned_runtime.py
+  - tools/verify_standalone.py
+  - tools/legacy/
+  suffixes:
+  - .7z
+  - .gguf
+  - .nvram
+  - .tar
+  - .tar.gz
+  - .vmdk
+  - .vmem
+  - .vmsn
+  - .zip
+  content_markers:
+  - "C:\\Users\\"
+  - /home/laris/.local-evaluation

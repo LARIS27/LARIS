@@ -1,0 +1,629 @@
+{
+  "campaign_id": "paper-main-20260913-25ab496-r4",
+  "conditions": {
+    "LOG_LINKED": {
+      "kv_capture_work_ci95_seconds": [
+        128.692464533801,
+        170.716319134599
+      ],
+      "kv_overhead_ci95_percent": [
+        93.043753828068,
+        112.494771448191
+      ],
+      "mean_kv_capture_work_seconds": 149.7043918342,
+      "mean_kv_overhead_percent": 102.769262638129,
+      "pair_count": 5,
+      "total_kv_capture_bytes": 71352565760,
+      "zero_loss": true
+    },
+    "PROXY": {
+      "kv_capture_work_ci95_seconds": [
+        298.94162716595,
+        365.43913486405
+      ],
+      "kv_overhead_ci95_percent": [
+        7.655263188154,
+        29.174059991111
+      ],
+      "mean_kv_capture_work_seconds": 332.190381015,
+      "mean_kv_overhead_percent": 18.414661589633,
+      "pair_count": 5,
+      "total_kv_capture_bytes": 71352565760,
+      "zero_loss": true
+    }
+  },
+  "evaluation": "kv-capture-overhead",
+  "model_id": "llama-3.2-3b-instruct-q4-k-m",
+  "pair_count": 5,
+  "paired_blocks": [
+    {
+      "block": 1,
+      "log_linked": {
+        "control_slot_id": "e6-b01-p4-log_linked_control",
+        "full_slot_id": "e6-b01-p5-log_linked",
+        "kv_capture_bytes": 14270513152,
+        "kv_capture_work_ns": 126443040034,
+        "kv_overhead_percent": 101.640564386146,
+        "normalized_control_factor": 0.394774329899,
+        "normalized_full_factor": 0.796025186861
+      },
+      "native_slot_id": "e6-b01-p1-baseline",
+      "proxy": {
+        "control_slot_id": "e6-b01-p2-proxy_control",
+        "full_slot_id": "e6-b01-p3-proxy",
+        "kv_capture_bytes": 14270513152,
+        "kv_capture_work_ns": 323218981106,
+        "kv_overhead_percent": 15.99282943049,
+        "normalized_control_factor": 0.427373141484,
+        "normalized_full_factor": 0.495722199033
+      }
+    },
+    {
+      "block": 2,
+      "log_linked": {
+        "control_slot_id": "e6-b02-p3-log_linked_control",
+        "full_slot_id": "e6-b02-p4-log_linked",
+        "kv_capture_bytes": 14270513152,
+        "kv_capture_work_ns": 157248691947,
+        "kv_overhead_percent": 107.071670391463,
+        "normalized_control_factor": 0.380669161868,
+        "normalized_full_factor": 0.788257992146
+      },
+      "native_slot_id": "e6-b02-p2-baseline",
+      "proxy": {
+        "control_slot_id": "e6-b02-p5-proxy_control",
+        "full_slot_id": "e6-b02-p1-proxy",
+        "kv_capture_bytes": 14270513152,
+        "kv_capture_work_ns": 318186112439,
+        "kv_overhead_percent": 19.962104660956,
+        "normalized_control_factor": 0.412672972378,
+        "normalized_full_factor": 0.495051183031
+      }
+    },
+    {
+      "block": 3,
+      "log_linked": {
+        "control_slot_id": "e6-b03-p5-log_linked_control",
+        "full_slot_id": "e6-b03-p2-log_linked",
+        "kv_capture_bytes": 14270513152,
+        "kv_capture_work_ns": 139624472064,
+        "kv_overhead_percent": 90.781108271961,
+        "normalized_control_factor": 0.387898562687,
+        "normalized_full_factor": 0.740037176865
+      },
+      "native_slot_id": "e6-b03-p3-baseline",
+      "proxy": {
+        "control_slot_id": "e6-b03-p1-proxy_control",
+        "full_slot_id": "e6-b03-p4-proxy",
+        "kv_capture_bytes": 14270513152,
+        "kv_capture_work_ns": 378332174436,
+        "kv_overhead_percent": 30.926426074882,
+        "normalized_control_factor": 0.391561166617,
+        "normalized_full_factor": 0.512657041348
+      }
+    },
+    {
+      "block": 4,
+      "log_linked": {
+        "control_slot_id": "e6-b04-p2-log_linked_control",
+        "full_slot_id": "e6-b04-p1-log_linked",
+        "kv_capture_bytes": 14270513152,
+        "kv_capture_work_ns": 155082370196,
+        "kv_overhead_percent": 102.536800416984,
+        "normalized_control_factor": 0.398612799869,
+        "normalized_full_factor": 0.807337610908
+      },
+      "native_slot_id": "e6-b04-p4-baseline",
+      "proxy": {
+        "control_slot_id": "e6-b04-p3-proxy_control",
+        "full_slot_id": "e6-b04-p5-proxy",
+        "kv_capture_bytes": 14270513152,
+        "kv_capture_work_ns": 310754672096,
+        "kv_overhead_percent": 18.419707765314,
+        "normalized_control_factor": 0.413573177108,
+        "normalized_full_factor": 0.489752147727
+      }
+    },
+    {
+      "block": 5,
+      "log_linked": {
+        "control_slot_id": "e6-b05-p1-log_linked_control",
+        "full_slot_id": "e6-b05-p3-log_linked",
+        "kv_capture_bytes": 14270513152,
+        "kv_capture_work_ns": 170123384930,
+        "kv_overhead_percent": 111.816169724093,
+        "normalized_control_factor": 0.338556349929,
+        "normalized_full_factor": 0.717117092778
+      },
+      "native_slot_id": "e6-b05-p5-baseline",
+      "proxy": {
+        "control_slot_id": "e6-b05-p4-proxy_control",
+        "full_slot_id": "e6-b05-p2-proxy",
+        "kv_capture_bytes": 14270513152,
+        "kv_capture_work_ns": 330459964998,
+        "kv_overhead_percent": 6.772240016522,
+        "normalized_control_factor": 0.402534874729,
+        "normalized_full_factor": 0.429795502596
+      }
+    }
+  ],
+  "paper_table": {
+    "columns": [
+      "Mode",
+      "KV capture work per run",
+      "Normalized KV-enabled overhead"
+    ],
+    "rows": [
+      {
+        "kv_capture_work_ci95_seconds": [
+          0,
+          0
+        ],
+        "mean_kv_capture_work_seconds": 0,
+        "mean_normalized_kv_overhead_percent": 0,
+        "mode": "Native",
+        "normalized_kv_overhead_ci95_percent": [
+          0,
+          0
+        ]
+      },
+      {
+        "kv_capture_work_ci95_seconds": [
+          298.94162716595,
+          365.43913486405
+        ],
+        "mean_kv_capture_work_seconds": 332.190381015,
+        "mean_normalized_kv_overhead_percent": 18.414661589633,
+        "mode": "Proxy",
+        "normalized_kv_overhead_ci95_percent": [
+          7.655263188154,
+          29.174059991111
+        ]
+      },
+      {
+        "kv_capture_work_ci95_seconds": [
+          128.692464533801,
+          170.716319134599
+        ],
+        "mean_kv_capture_work_seconds": 149.7043918342,
+        "mean_normalized_kv_overhead_percent": 102.769262638129,
+        "mode": "Log-linked",
+        "normalized_kv_overhead_ci95_percent": [
+          93.043753828068,
+          112.494771448191
+        ]
+      }
+    ]
+  },
+  "prompt_set_sha256": "sha256:61e8bac70fdc868d31f7452c9f35a51330d1c8d954689936ff197996ea0f0a08",
+  "raw_trials": [
+    {
+      "block": 1,
+      "capture_policy": "NONE",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "BASELINE",
+      "native_generation_duration_ns": 1779061710000,
+      "native_prompt_eval_duration_ns": 3882565301994,
+      "position": 1,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b01-p1-baseline-dfd231d09d344ddc91a228ed1248e2b4",
+      "slot_id": "e6-b01-p1-baseline",
+      "timed_duration_ns": 2201186960481
+    },
+    {
+      "block": 1,
+      "capture_policy": "CONTROL_NO_KV",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "PROXY_CONTROL",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 2,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b01-p2-proxy_control-1bea1b356ad34e3aa8365e6dfb3d48fc",
+      "slot_id": "e6-b01-p2-proxy_control",
+      "timed_duration_ns": 2419627322025
+    },
+    {
+      "block": 1,
+      "capture_policy": "FULL",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 14270513152,
+      "kv_capture_enabled": true,
+      "kv_capture_work_ns": 323218981106,
+      "lost_events": 0,
+      "mode": "PROXY",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 3,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b01-p3-proxy-cd002e82138c47e79ce7d064c1c1fbe0",
+      "slot_id": "e6-b01-p3-proxy",
+      "timed_duration_ns": 2806594192490
+    },
+    {
+      "block": 1,
+      "capture_policy": "CONTROL_NO_KV",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "LOG_LINKED_CONTROL",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 4,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b01-p4-log_linked_control-6f94af53bd2d481796d9e4b9a1c0dffb",
+      "slot_id": "e6-b01-p4-log_linked_control",
+      "timed_duration_ns": 2235065009800
+    },
+    {
+      "block": 1,
+      "capture_policy": "FULL",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 14270513152,
+      "kv_capture_enabled": true,
+      "kv_capture_work_ns": 126443040034,
+      "lost_events": 0,
+      "mode": "LOG_LINKED",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 5,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b01-p5-log_linked-afb1785677ca4042b64da6e207567a47",
+      "slot_id": "e6-b01-p5-log_linked",
+      "timed_duration_ns": 4506797700158
+    },
+    {
+      "block": 2,
+      "capture_policy": "FULL",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 14270513152,
+      "kv_capture_enabled": true,
+      "kv_capture_work_ns": 318186112439,
+      "lost_events": 0,
+      "mode": "PROXY",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 1,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b02-p1-proxy-0befdae7427343a290e6afc80cd0e743",
+      "slot_id": "e6-b02-p1-proxy",
+      "timed_duration_ns": 2790711480993
+    },
+    {
+      "block": 2,
+      "capture_policy": "NONE",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "BASELINE",
+      "native_generation_duration_ns": 1764592255000,
+      "native_prompt_eval_duration_ns": 3872625827995,
+      "position": 2,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b02-p2-baseline-e6c0409f23bc4693be65e73d9c21071a",
+      "slot_id": "e6-b02-p2-baseline",
+      "timed_duration_ns": 2176015304417
+    },
+    {
+      "block": 2,
+      "capture_policy": "CONTROL_NO_KV",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "LOG_LINKED_CONTROL",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 3,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b02-p3-log_linked_control-a3af065da8194910ae3128bd5a5519ea",
+      "slot_id": "e6-b02-p3-log_linked_control",
+      "timed_duration_ns": 2145915082923
+    },
+    {
+      "block": 2,
+      "capture_policy": "FULL",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 14270513152,
+      "kv_capture_enabled": true,
+      "kv_capture_work_ns": 157248691947,
+      "lost_events": 0,
+      "mode": "LOG_LINKED",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 4,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b02-p4-log_linked-c3792c107f9e452d804605fa22c0a454",
+      "slot_id": "e6-b02-p4-log_linked",
+      "timed_duration_ns": 4443582207391
+    },
+    {
+      "block": 2,
+      "capture_policy": "CONTROL_NO_KV",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "PROXY_CONTROL",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 5,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b02-p5-proxy_control-b4f364d5ca714f359e881d8ecdd598d8",
+      "slot_id": "e6-b02-p5-proxy_control",
+      "timed_duration_ns": 2326327542252
+    },
+    {
+      "block": 3,
+      "capture_policy": "CONTROL_NO_KV",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "PROXY_CONTROL",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 1,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b03-p1-proxy_control-e8ebb7d1174a418489bc8fae4b6f46f7",
+      "slot_id": "e6-b03-p1-proxy_control",
+      "timed_duration_ns": 2328130801602
+    },
+    {
+      "block": 3,
+      "capture_policy": "FULL",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 14270513152,
+      "kv_capture_enabled": true,
+      "kv_capture_work_ns": 139624472064,
+      "lost_events": 0,
+      "mode": "LOG_LINKED",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 2,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b03-p2-log_linked-b07ef7cee4284cdeb21a7c23ac147789",
+      "slot_id": "e6-b03-p2-log_linked",
+      "timed_duration_ns": 4400087375048
+    },
+    {
+      "block": 3,
+      "capture_policy": "NONE",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "BASELINE",
+      "native_generation_duration_ns": 1859215667999,
+      "native_prompt_eval_duration_ns": 4086549642994,
+      "position": 3,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b03-p3-baseline-09b12edddc254fab8da09d53f03bf589",
+      "slot_id": "e6-b03-p3-baseline",
+      "timed_duration_ns": 2325249465247
+    },
+    {
+      "block": 3,
+      "capture_policy": "FULL",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 14270513152,
+      "kv_capture_enabled": true,
+      "kv_capture_work_ns": 378332174436,
+      "lost_events": 0,
+      "mode": "PROXY",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 4,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b03-p4-proxy-4e744f9a84174cd1bf0f40dea49ad18f",
+      "slot_id": "e6-b03-p4-proxy",
+      "timed_duration_ns": 3048138452886
+    },
+    {
+      "block": 3,
+      "capture_policy": "CONTROL_NO_KV",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "LOG_LINKED_CONTROL",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 5,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b03-p5-log_linked_control-ba9257674b5942a68ed1b301e89ada58",
+      "slot_id": "e6-b03-p5-log_linked_control",
+      "timed_duration_ns": 2306353818207
+    },
+    {
+      "block": 4,
+      "capture_policy": "FULL",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 14270513152,
+      "kv_capture_enabled": true,
+      "kv_capture_work_ns": 155082370196,
+      "lost_events": 0,
+      "mode": "LOG_LINKED",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 1,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b04-p1-log_linked-785a195085744c60a1a8aa9ad159d496",
+      "slot_id": "e6-b04-p1-log_linked",
+      "timed_duration_ns": 4353346380787
+    },
+    {
+      "block": 4,
+      "capture_policy": "CONTROL_NO_KV",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "LOG_LINKED_CONTROL",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 2,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b04-p2-log_linked_control-e664ae0972034130bdc4d848b1c532c8",
+      "slot_id": "e6-b04-p2-log_linked_control",
+      "timed_duration_ns": 2149410068602
+    },
+    {
+      "block": 4,
+      "capture_policy": "CONTROL_NO_KV",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "PROXY_CONTROL",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 3,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b04-p3-proxy_control-85727d8700b1469e85df15cce07e8557",
+      "slot_id": "e6-b04-p3-proxy_control",
+      "timed_duration_ns": 2230079794906
+    },
+    {
+      "block": 4,
+      "capture_policy": "NONE",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "BASELINE",
+      "native_generation_duration_ns": 1687813549000,
+      "native_prompt_eval_duration_ns": 3704411861994,
+      "position": 4,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b04-p4-baseline-033164eb3c424450b027a28968171fa1",
+      "slot_id": "e6-b04-p4-baseline",
+      "timed_duration_ns": 2102143050657
+    },
+    {
+      "block": 4,
+      "capture_policy": "FULL",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 14270513152,
+      "kv_capture_enabled": true,
+      "kv_capture_work_ns": 310754672096,
+      "lost_events": 0,
+      "mode": "PROXY",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 5,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b04-p5-proxy-43add20a29974b61adc0604678bdf435",
+      "slot_id": "e6-b04-p5-proxy",
+      "timed_duration_ns": 2640853976061
+    },
+    {
+      "block": 5,
+      "capture_policy": "CONTROL_NO_KV",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "LOG_LINKED_CONTROL",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 1,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b05-p1-log_linked_control-10fa330dc54f490e8d0a45f3fcd7de8b",
+      "slot_id": "e6-b05-p1-log_linked_control",
+      "timed_duration_ns": 2274464320185
+    },
+    {
+      "block": 5,
+      "capture_policy": "FULL",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 14270513152,
+      "kv_capture_enabled": true,
+      "kv_capture_work_ns": 330459964998,
+      "lost_events": 0,
+      "mode": "PROXY",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 2,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b05-p2-proxy-6ba4e10ac6474c4b82855686eedec386",
+      "slot_id": "e6-b05-p2-proxy",
+      "timed_duration_ns": 2887420471758
+    },
+    {
+      "block": 5,
+      "capture_policy": "FULL",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 14270513152,
+      "kv_capture_enabled": true,
+      "kv_capture_work_ns": 170123384930,
+      "lost_events": 0,
+      "mode": "LOG_LINKED",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 3,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b05-p3-log_linked-6b3defd955f1417199d566a73472cdae",
+      "slot_id": "e6-b05-p3-log_linked",
+      "timed_duration_ns": 4817683204757
+    },
+    {
+      "block": 5,
+      "capture_policy": "CONTROL_NO_KV",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "PROXY_CONTROL",
+      "native_generation_duration_ns": null,
+      "native_prompt_eval_duration_ns": null,
+      "position": 4,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b05-p4-proxy_control-69dc52811eb740e29f7a70ccc17541dd",
+      "slot_id": "e6-b05-p4-proxy_control",
+      "timed_duration_ns": 2704280130595
+    },
+    {
+      "block": 5,
+      "capture_policy": "NONE",
+      "generated_token_count": 1080,
+      "kv_capture_bytes": 0,
+      "kv_capture_enabled": false,
+      "kv_capture_work_ns": 0,
+      "lost_events": 0,
+      "mode": "BASELINE",
+      "native_generation_duration_ns": 2110754958000,
+      "native_prompt_eval_duration_ns": 4607371346997,
+      "position": 5,
+      "prompt_token_count": 123529,
+      "run_id": "e6-b05-p5-baseline-bfa683a08e92496a83abe21d51960aec",
+      "slot_id": "e6-b05-p5-baseline",
+      "timed_duration_ns": 2616993318164
+    }
+  ],
+  "schema_version": "2.0",
+  "state": "COMPLETE",
+  "trial_count": 25
+}

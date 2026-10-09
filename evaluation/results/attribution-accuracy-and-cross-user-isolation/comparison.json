@@ -1,0 +1,41 @@
+{
+  "schema_version": "2.0",
+  "experiment_id": "attribution-accuracy-and-cross-user-isolation",
+  "cell_id": "K4",
+  "paired_recall_count_per_model_condition": 180,
+  "field_opportunity_count_per_model_condition": 900,
+  "models": {
+    "llama-3.2-3b-instruct-q4-k-m": {
+      "conditions": {
+        "NATIVE": {"correct_fields": 870, "complete_records": 174, "cross_actor_fields": 0},
+        "LOG_LINKED": {"correct_fields": 865, "complete_records": 173, "response_exact_matches": 179, "native_correct_fields_preserved": 865, "attribution_correct": 180, "cross_actor_fields": 0},
+        "PROXY": {"correct_fields": 855, "complete_records": 171, "response_exact_matches": 177, "native_correct_fields_preserved": 855, "attribution_correct": 180, "cross_actor_fields": 0}
+      },
+      "checkpoints": [
+        {"id": "C1", "native_complete": 28, "log_linked_complete": 28, "proxy_complete": 28},
+        {"id": "C2", "native_complete": 30, "log_linked_complete": 30, "proxy_complete": 30},
+        {"id": "C3", "native_complete": 28, "log_linked_complete": 28, "proxy_complete": 26},
+        {"id": "C4", "native_complete": 30, "log_linked_complete": 29, "proxy_complete": 30},
+        {"id": "C5", "native_complete": 29, "log_linked_complete": 29, "proxy_complete": 29},
+        {"id": "C6", "native_complete": 29, "log_linked_complete": 29, "proxy_complete": 28}
+      ]
+    },
+    "qwen2.5-7b-instruct-q4-k-m": {
+      "conditions": {
+        "NATIVE": {"correct_fields": 882, "complete_records": 173, "cross_actor_fields": 0},
+        "LOG_LINKED": {"correct_fields": 876, "complete_records": 171, "response_exact_matches": 178, "native_correct_fields_preserved": 876, "attribution_correct": 180, "cross_actor_fields": 0},
+        "PROXY": {"correct_fields": 877, "complete_records": 172, "response_exact_matches": 179, "native_correct_fields_preserved": 877, "attribution_correct": 180, "cross_actor_fields": 0}
+      },
+      "checkpoints": [
+        {"id": "C1", "native_complete": 26, "log_linked_complete": 25, "proxy_complete": 26},
+        {"id": "C2", "native_complete": 30, "log_linked_complete": 30, "proxy_complete": 30},
+        {"id": "C3", "native_complete": 30, "log_linked_complete": 30, "proxy_complete": 30},
+        {"id": "C4", "native_complete": 27, "log_linked_complete": 27, "proxy_complete": 26},
+        {"id": "C5", "native_complete": 30, "log_linked_complete": 30, "proxy_complete": 30},
+        {"id": "C6", "native_complete": 30, "log_linked_complete": 29, "proxy_complete": 30}
+      ]
+    }
+  },
+  "timing_scope": "CORRECTNESS_RUN_ONLY_NOT_OVERHEAD_BENCHMARK",
+  "k8_scope": "OUT_OF_SCOPE"
+}

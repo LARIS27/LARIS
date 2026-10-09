@@ -1,0 +1,23 @@
+schema_version: '1.0'
+models:
+- model_id: llama-3.2-3b-instruct-q4-k-m
+  source_repository: meta-llama/Llama-3.2-3B-Instruct
+  source_revision: 0cb88a4f764b7a12671c53f0838cd831a0843b95
+  license_id: llama-3.2-community
+  license_name: Llama 3.2 Community License
+  license_url: https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct/blob/main/LICENSE.txt
+  license_file_name: LICENSE.llama-3.2.txt
+  acceptable_use_url: https://www.llama.com/llama3/use-policy/
+  redistributes_weights: false
+  required_notices:
+  - Built with Llama
+  - Llama 3.2 is licensed under the Llama 3.2 Community License, Copyright © Meta Platforms, Inc. All Rights Reserved.
+- model_id: qwen2.5-7b-instruct-q4-k-m
+  source_repository: Qwen/Qwen2.5-7B-Instruct-GGUF
+  source_revision: bb5d59e06d9551d752d08b292a50eb208b07ab1f
+  license_id: Apache-2.0
+  license_name: Apache License 2.0
+  license_url: https://huggingface.co/Qwen/Qwen2.5-7B-Instruct-GGUF/blob/main/LICENSE
+  license_file_name: LICENSE.qwen2.5-apache-2.0.txt
+  redistributes_weights: false
+  required_notices: []

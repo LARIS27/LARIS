@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/log_linked_state_unit.schema.json",
+  "title": "LARIS Log-linked KV State Unit Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "unit_id", "unit_kind", "runtime_instance_id",
+    "runtime_pid", "runtime_start_time_ticks", "seq_id", "sequence_generation",
+    "apply_call_id", "apply_monotonic_ns", "previous_unit_digest",
+    "base_unit_digest", "position_ranges", "kv_cell_ranges", "stream_indexes",
+    "mutation_kinds", "layout_profile_digest", "layout_topology_digest",
+    "kv_backing_provenance_digest", "observer_health", "payload_file",
+    "payload_size_bytes", "payload_digest", "contains_prompt_text",
+    "contains_response_text", "contains_explicit_token_history", "state"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "unit_id": {"type": "string", "pattern": "^su_[0-9a-f]{64}$"},
+    "unit_kind": {"enum": ["BASE", "DELTA"]},
+    "runtime_instance_id": {"$ref": "#/$defs/safeId"},
+    "runtime_pid": {"type": "integer", "minimum": 1},
+    "runtime_start_time_ticks": {"type": "integer", "minimum": 1},
+    "seq_id": {"type": "integer", "minimum": 0},
+    "sequence_generation": {"type": "integer", "minimum": 1},
+    "apply_call_id": {"type": "integer", "minimum": 0},
+    "apply_monotonic_ns": {"type": "integer", "minimum": 0},
+    "previous_unit_digest": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "base_unit_digest": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "position_ranges": {"type": "array", "items": {"$ref": "#/$defs/inclusiveRange"}},
+    "kv_cell_ranges": {"type": "array", "items": {"$ref": "#/$defs/inclusiveRange"}},
+    "stream_indexes": {"type": "array", "items": {"type": "integer", "minimum": 0}, "uniqueItems": true},
+    "mutation_kinds": {"type": "array", "items": {"$ref": "#/$defs/safeId"}, "uniqueItems": true},
+    "layout_profile_digest": {"$ref": "#/$defs/sha256"},
+    "layout_topology_digest": {"$ref": "#/$defs/sha256"},
+    "kv_backing_provenance_digest": {"$ref": "#/$defs/sha256"},
+    "observer_health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observer_loss_count", "parse_failure_count", "unmatched_call_count", "unsupported_mutation_count"],
+      "properties": {
+        "observer_loss_count": {"type": "integer", "minimum": 0},
+        "parse_failure_count": {"type": "integer", "minimum": 0},
+        "unmatched_call_count": {"type": "integer", "minimum": 0},
+        "unsupported_mutation_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "payload_file": {"const": "runtime_state_payload.bin"},
+    "payload_size_bytes": {"type": "integer", "minimum": 0},
+    "payload_digest": {"$ref": "#/$defs/sha256"},
+    "contains_prompt_text": {"const": false},
+    "contains_response_text": {"const": false},
+    "contains_explicit_token_history": {"const": false},
+    "state": {"enum": ["COMPLETE", "INCOMPLETE"]}
+  },
+  "$defs": {
+    "safeId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,191}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "inclusiveRange": {
+      "type": "array",
+      "prefixItems": [{"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0}],
+      "minItems": 2,
+      "maxItems": 2
+    }
+  }
+}

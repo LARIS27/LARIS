@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/log_linked_attribution_result.schema.json",
+  "title": "LARIS Log-linked Attribution Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "analysis_version", "adapter_id", "runtime_instance_id",
+    "request_ref", "task_id", "slot_id", "slot_epoch", "state_binding",
+    "endpoint_binding", "final_decision", "endpoint_type", "endpoint_ref",
+    "correlation_key_id", "cutoff_apply_call_id", "cutoff_monotonic_ns",
+    "state_unit_chain_digests", "source_application_log_digest",
+    "source_observer_terminal_seal_digest", "clock_normalization_receipt_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "analysis_version": {"const": "global-structural-ranked-v2"},
+    "adapter_id": {"$ref": "#/$defs/safeId"},
+    "runtime_instance_id": {"$ref": "#/$defs/runtimeInstanceId"},
+    "request_ref": {"$ref": "#/$defs/safeId"},
+    "task_id": {"type": "integer", "minimum": 0},
+    "slot_id": {"type": "integer", "minimum": 0},
+    "slot_epoch": {"type": "integer", "minimum": 1},
+    "state_binding": {"$ref": "#/$defs/bindingAssessment"},
+    "endpoint_binding": {"$ref": "#/$defs/bindingAssessment"},
+    "final_decision": {"$ref": "#/$defs/decision"},
+    "endpoint_type": {"type": ["string", "null"], "enum": ["IPV4", "IPV6", null]},
+    "endpoint_ref": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9_-]{43}$"},
+    "correlation_key_id": {"$ref": "#/$defs/safeId"},
+    "cutoff_apply_call_id": {"$ref": "#/$defs/nullableCounter"},
+    "cutoff_monotonic_ns": {"$ref": "#/$defs/nullableCounter"},
+    "state_unit_chain_digests": {"type": "array", "items": {"$ref": "#/$defs/sha256"}, "uniqueItems": true},
+    "source_application_log_digest": {"$ref": "#/$defs/sha256"},
+    "source_observer_terminal_seal_digest": {"$ref": "#/$defs/sha256"},
+    "clock_normalization_receipt_digest": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "bindingAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision", "reason_code", "candidate_ids", "candidate_count",
+        "selected_candidate_id", "optimal_candidate_count",
+        "optimal_assignment_count", "ranking_stage"
+      ],
+      "properties": {
+        "decision": {"$ref": "#/$defs/decision"},
+        "reason_code": {"$ref": "#/$defs/safeId"},
+        "candidate_ids": {"type": "array", "items": {"$ref": "#/$defs/safeId"}, "uniqueItems": true},
+        "candidate_count": {"type": "integer", "minimum": 0},
+        "selected_candidate_id": {"anyOf": [{"$ref": "#/$defs/safeId"}, {"type": "null"}]},
+        "optimal_candidate_count": {"$ref": "#/$defs/nullableCounter"},
+        "optimal_assignment_count": {"$ref": "#/$defs/nullableCounter"},
+        "ranking_stage": {"anyOf": [{"$ref": "#/$defs/safeId"}, {"type": "null"}]}
+      }
+    },
+    "decision": {"enum": ["CERTIFIED", "RANKED", "AMBIGUOUS", "INCOMPLETE"]},
+    "safeId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,191}$"},
+    "runtimeInstanceId": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9._-]{0,191}|sha256:[0-9a-f]{64})$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "nullableCounter": {"type": ["integer", "null"], "minimum": 0}
+  }
+}

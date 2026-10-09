@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/log_linked_application_event.schema.json",
+  "title": "LARIS Log-linked Normalized Application Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "adapter_id", "source_line_number", "source_order",
+    "wall_time_utc_ns", "event_type", "method", "path_class", "status_code",
+    "endpoint_type", "endpoint_value", "task_id", "slot_id",
+    "prompt_tokens_total", "prompt_tokens_new", "prompt_tokens_reused",
+    "generated_tokens", "terminal_outcome"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "adapter_id": {"$ref": "#/$defs/safeId"},
+    "source_line_number": {"type": "integer", "minimum": 1},
+    "source_order": {"type": "integer", "minimum": 0},
+    "wall_time_utc_ns": {"type": "integer", "minimum": 0},
+    "event_type": {"enum": ["ACCESS", "SLOT_PROMPT", "SLOT_REUSE", "SLOT_PROMPT_EVAL", "SLOT_TERMINAL"]},
+    "method": {"type": ["string", "null"], "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", null]},
+    "path_class": {"anyOf": [{"$ref": "#/$defs/safeId"}, {"type": "null"}]},
+    "status_code": {"type": ["integer", "null"], "minimum": 100, "maximum": 599},
+    "endpoint_type": {"type": ["string", "null"], "enum": ["IPV4", "IPV6", null]},
+    "endpoint_value": {"type": ["string", "null"], "minLength": 1, "maxLength": 255},
+    "task_id": {"$ref": "#/$defs/nullableCounter"},
+    "slot_id": {"$ref": "#/$defs/nullableCounter"},
+    "prompt_tokens_total": {"$ref": "#/$defs/nullableCounter"},
+    "prompt_tokens_new": {"$ref": "#/$defs/nullableCounter"},
+    "prompt_tokens_reused": {"$ref": "#/$defs/nullableCounter"},
+    "generated_tokens": {"$ref": "#/$defs/nullableCounter"},
+    "terminal_outcome": {"type": ["string", "null"], "enum": ["COMPLETED", "CANCELLED", "ERROR", "RELEASED", null]}
+  },
+  "$defs": {
+    "safeId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,191}$"},
+    "nullableCounter": {"type": ["integer", "null"], "minimum": 0}
+  }
+}

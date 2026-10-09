@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/gate_result.schema.json",
+  "title": "LARIS Experiment Gate Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "gate_id",
+    "run_id",
+    "passed",
+    "failure_codes",
+    "metrics",
+    "evidence_refs"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "gate_id": {"type": "string", "enum": ["gate_0", "gate_a"]},
+    "run_id": {"type": "string", "minLength": 1},
+    "passed": {"type": "boolean"},
+    "failure_codes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "metrics": {"type": "object", "additionalProperties": {"type": ["integer", "number", "string", "boolean", "null"]}},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  }
+}

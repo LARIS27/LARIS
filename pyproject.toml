@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "laris-onpremise"
+version = "0.1.0"
+description = "Standalone forensic acquisition research framework for shared on-premises LLM runtimes."
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+dependencies = ["PyYAML>=6.0,<7"]
+
+[project.scripts]
+laris = "laris_onpremise.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = ["--import-mode=importlib"]
+markers = [
+  "contract: package and evidence contract tests",
+  "integration: multi-component portable integration tests",
+  "log_linked: requires the controlled official llama-server evaluation environment",
+  "live_llama_server: requires a running pinned upstream llama-server",
+  "native_observer: requires Linux, libbpf and privileged eBPF access",
+]

@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/runtime_state_observer_event.schema.json",
+  "title": "LARIS complete runtime-state observer frame",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "frame_id",
+    "frame_sequence",
+    "frame_state",
+    "frame_digest",
+    "runtime_instance_id",
+    "runtime_pid",
+    "runtime_start_time_ticks",
+    "runtime_binary_sha256",
+    "mapped_libllama_sha256",
+    "mapped_libllama_elf_build_id",
+    "profile_digest",
+    "memory_family",
+    "layout",
+    "observed_n_stream",
+    "seq_to_stream",
+    "backing_events",
+    "token_cells",
+    "decode_counts",
+    "mapping_mutation_count",
+    "mutation_counters",
+    "observer_loss_count",
+    "parse_failure_count",
+    "unmatched_call_count",
+    "unsupported_mutation_count",
+    "window_start_monotonic_ns",
+    "window_end_monotonic_ns",
+    "cutoff_monotonic_ns"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "frame_id": {"type": "string", "minLength": 1},
+    "frame_sequence": {"type": "integer", "minimum": 0},
+    "frame_state": {"const": "complete"},
+    "frame_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "runtime_instance_id": {"type": "string", "minLength": 1},
+    "runtime_pid": {"type": "integer", "minimum": 1},
+    "runtime_start_time_ticks": {"type": "integer", "minimum": 1},
+    "runtime_binary_sha256": {"$ref": "#/$defs/sha256"},
+    "mapped_libllama_sha256": {"$ref": "#/$defs/sha256"},
+    "mapped_libllama_elf_build_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "profile_digest": {"$ref": "#/$defs/sha256"},
+    "memory_family": {"type": "string", "minLength": 1},
+    "layout": {"$ref": "#/$defs/simpleKvLayout"},
+    "observed_n_stream": {"type": "integer", "minimum": 1},
+    "seq_to_stream": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/sequenceStream"}
+    },
+    "backing_events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/kvBackingEvent"}
+    },
+    "token_cells": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/tokenCellEvent"}
+    },
+    "decode_counts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/decodeCount"}
+    },
+    "mapping_mutation_count": {"type": "integer", "minimum": 0},
+    "mutation_counters": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/mutationCounter"}
+    },
+    "observer_loss_count": {"type": "integer", "minimum": 0},
+    "parse_failure_count": {"type": "integer", "minimum": 0},
+    "unmatched_call_count": {"type": "integer", "minimum": 0},
+    "unsupported_mutation_count": {"type": "integer", "minimum": 0},
+    "window_start_monotonic_ns": {"type": "integer", "minimum": 0},
+    "window_end_monotonic_ns": {"type": "integer", "minimum": 0},
+    "cutoff_monotonic_ns": {"type": "integer", "minimum": 0}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nonnegativeInteger": {"type": "integer", "minimum": 0},
+    "positiveInteger": {"type": "integer", "minimum": 1},
+    "sequenceStream": {
+      "type": "object",
+      "required": ["seq_id", "stream_index"],
+      "properties": {
+        "seq_id": {"$ref": "#/$defs/nonnegativeInteger"},
+        "stream_index": {"$ref": "#/$defs/nonnegativeInteger"}
+      },
+      "additionalProperties": false
+    },
+    "kvBackingEvent": {
+      "type": "object",
+      "required": [
+        "event_id",
+        "tgid",
+        "tid",
+        "monotonic_ns",
+        "base_address",
+        "size_bytes"
+      ],
+      "properties": {
+        "event_id": {"$ref": "#/$defs/nonnegativeInteger"},
+        "tgid": {"$ref": "#/$defs/positiveInteger"},
+        "tid": {"$ref": "#/$defs/positiveInteger"},
+        "monotonic_ns": {"$ref": "#/$defs/nonnegativeInteger"},
+        "base_address": {"$ref": "#/$defs/nonnegativeInteger"},
+        "size_bytes": {"$ref": "#/$defs/positiveInteger"}
+      },
+      "additionalProperties": false
+    },
+    "tokenCellEvent": {
+      "type": "object",
+      "required": [
+        "apply_call_id",
+        "tgid",
+        "tid",
+        "monotonic_ns",
+        "seq_id",
+        "stream_index",
+        "token_position",
+        "cell_index"
+      ],
+      "properties": {
+        "apply_call_id": {"$ref": "#/$defs/nonnegativeInteger"},
+        "tgid": {"$ref": "#/$defs/positiveInteger"},
+        "tid": {"$ref": "#/$defs/positiveInteger"},
+        "monotonic_ns": {"$ref": "#/$defs/nonnegativeInteger"},
+        "seq_id": {"$ref": "#/$defs/nonnegativeInteger"},
+        "stream_index": {"$ref": "#/$defs/nonnegativeInteger"},
+        "token_position": {"$ref": "#/$defs/nonnegativeInteger"},
+        "cell_index": {"$ref": "#/$defs/nonnegativeInteger"}
+      },
+      "additionalProperties": false
+    },
+    "decodeCount": {
+      "type": "object",
+      "required": ["seq_id", "count"],
+      "properties": {
+        "seq_id": {"$ref": "#/$defs/nonnegativeInteger"},
+        "count": {"$ref": "#/$defs/nonnegativeInteger"}
+      },
+      "additionalProperties": false
+    },
+    "mutationCounter": {
+      "type": "object",
+      "required": ["mutation", "count"],
+      "properties": {
+        "mutation": {"type": "string", "minLength": 1},
+        "count": {"$ref": "#/$defs/nonnegativeInteger"}
+      },
+      "additionalProperties": false
+    },
+    "tensorRow": {
+      "type": "object",
+      "required": [
+        "kind",
+        "layer",
+        "stream_index",
+        "tensor_address",
+        "row_size",
+        "cell_capacity",
+        "ggml_type_id",
+        "element_size",
+        "embedding_width"
+      ],
+      "properties": {
+        "kind": {"enum": ["k", "v"]},
+        "layer": {"$ref": "#/$defs/nonnegativeInteger"},
+        "stream_index": {"$ref": "#/$defs/nonnegativeInteger"},
+        "tensor_address": {"$ref": "#/$defs/nonnegativeInteger"},
+        "row_size": {"$ref": "#/$defs/positiveInteger"},
+        "cell_capacity": {"$ref": "#/$defs/positiveInteger"},
+        "ggml_type_id": {"$ref": "#/$defs/nonnegativeInteger"},
+        "element_size": {"$ref": "#/$defs/positiveInteger"},
+        "embedding_width": {"$ref": "#/$defs/positiveInteger"}
+      },
+      "additionalProperties": false
+    },
+    "simpleKvLayout": {
+      "type": "object",
+      "required": [
+        "profile_digest",
+        "n_stream",
+        "n_ctx",
+        "n_seq_max",
+        "n_layer",
+        "n_pos_per_embd",
+        "v_trans",
+        "tensors"
+      ],
+      "properties": {
+        "profile_digest": {"$ref": "#/$defs/sha256"},
+        "n_stream": {"$ref": "#/$defs/positiveInteger"},
+        "n_ctx": {"$ref": "#/$defs/positiveInteger"},
+        "n_seq_max": {"$ref": "#/$defs/positiveInteger"},
+        "n_layer": {"$ref": "#/$defs/positiveInteger"},
+        "n_pos_per_embd": {"$ref": "#/$defs/positiveInteger"},
+        "v_trans": {"type": "boolean"},
+        "tensors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/tensorRow"}
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,23 @@
+schema_version: "1.0"
+adapter_id: llama-server-daf6bc9f-trace-v1
+application: llama-server
+upstream_commit: daf6bc9f2d3516d7bda73d191c6a01388aff09c5
+maximum_line_bytes: 4096
+maximum_log_bytes: 1073741824
+required_arguments:
+  - --log-verbosity
+  - "4"
+  - --log-timestamps
+  - --log-file
+forbidden_arguments:
+  - -v
+  - --verbose
+  - --log-verbose
+  - --verbose-prompt
+  - --log-disable
+privacy_contract:
+  allow_endpoint_value_in_restricted_evidence: true
+  allow_request_body: false
+  allow_response_body: false
+  allow_prompt_text: false
+  allow_token_ids: false

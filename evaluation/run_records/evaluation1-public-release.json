@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0",
+  "release_id": "evaluation1-release-v1",
+  "source_evaluation": "Evaluation1",
+  "publication_status": "PUBLISHED",
+  "artifact_locations_sha256": "sha256:6af51c922a308c0fadca28c53b2fe520bb8b14b01042e8667efce583e24d8ceb",
+  "publication_boundary": {
+    "external_release_size_bytes": 13242821929,
+    "file_count": 14,
+    "model_weights_included": false,
+    "payload_count": 240
+  },
+  "verification": {
+    "independent_verifier": "VERIFIED",
+    "materialize_smoke_cases": 4,
+    "materialize_smoke_status": "VERIFIED",
+    "packager_verification": "VERIFIED"
+  },
+  "artifacts": [
+    {
+      "archive_path": "models/llama-3.2-3b-instruct-q4-k-m/log-linked.tar",
+      "archive_sha256": "sha256:2894353e5640e731cfd1fc00f12b64b6c86f0d17bb1cbdeb4e5f5115703e1e67",
+      "archive_size_bytes": 4484464640,
+      "bundle_count": 60,
+      "mode": "LOG_LINKED",
+      "model_id": "llama-3.2-3b-instruct-q4-k-m"
+    },
+    {
+      "archive_path": "models/llama-3.2-3b-instruct-q4-k-m/proxy.tar",
+      "archive_sha256": "sha256:c35032aa65ac367e3242c1d9a3d2690bac6d6b39c3471ea0e2e5029ae8111af1",
+      "archive_size_bytes": 4484208640,
+      "bundle_count": 60,
+      "mode": "PROXY",
+      "model_id": "llama-3.2-3b-instruct-q4-k-m"
+    },
+    {
+      "archive_path": "models/qwen2.5-7b-instruct-q4-k-m/log-linked.tar",
+      "archive_sha256": "sha256:d2c6f7f2b1b0bfbbeebba8d8242a91f1aa59b9f037f8fbc9868718239870195b",
+      "archive_size_bytes": 2137180160,
+      "bundle_count": 60,
+      "mode": "LOG_LINKED",
+      "model_id": "qwen2.5-7b-instruct-q4-k-m"
+    },
+    {
+      "archive_path": "models/qwen2.5-7b-instruct-q4-k-m/proxy.tar",
+      "archive_sha256": "sha256:7820484a828bbea5c19dec6e935457482cbde28abdcadbd1d4ed9d19cc21a2e1",
+      "archive_size_bytes": 2136924160,
+      "bundle_count": 60,
+      "mode": "PROXY",
+      "model_id": "qwen2.5-7b-instruct-q4-k-m"
+    }
+  ],
+  "fixture_keys": [
+    {
+      "key_id": "identity-epoch-20260915-5f0d02cf",
+      "key_sha256": "sha256:5f0d02cf1b73a43db4577fb094496ad0ebdb2f88a8e9ab681ef7a18012292b9e",
+      "role": "RUNTIME_PROXY_IDENTITY",
+      "status": "VERIFIED_SYNTHETIC_ONLY"
+    },
+    {
+      "key_id": "paper-eval-correlation-v1",
+      "key_sha256": "sha256:5aa31af06af1da600167acf7875b07748d813c46f7f1ed53b5069f406821cc8f",
+      "role": "LOG_LINKED_CORRELATION",
+      "status": "VERIFIED_SYNTHETIC_ONLY"
+    }
+  ],
+  "release_files": [
+    {
+      "path": "checksums.sha256",
+      "sha256": "sha256:e46a62557f6e7394c4a9129fcc5cab6682360c69f59aa108527fd0d785dd9662",
+      "size_bytes": 1314
+    },
+    {
+      "path": "release-manifest.json",
+      "sha256": "sha256:7751fee3665646d992305903dabe402e411f0b2ddd7674beafa7f9b52fe457e7",
+      "size_bytes": 2520
+    },
+    {
+      "path": "shared-data.tar.gz",
+      "sha256": "sha256:314fdcce2249523ec713a428ca49262bb7219629f23a670bcb231208926f378a",
+      "size_bytes": 17817
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "sha256:acd9433db6c08269ee1dcc2c21466ae31db9a973b84cd024a4a291d9f36961b5",
+      "size_bytes": 525
+    },
+    {
+      "path": "fixtures/identity-fixtures.json",
+      "sha256": "sha256:f148530afc1edff9d468a167c2d717bb77ebb90d77ae2f2c025999cd17998394",
+      "size_bytes": 2378
+    },
+    {
+      "path": "fixtures/key-provenance.json",
+      "sha256": "sha256:d9b1bfde1ae8bd8c80bdbdfa8a5faabd45814da8f9c9bbfe81dfec57a8a5f174",
+      "size_bytes": 699
+    }
+  ]
+}

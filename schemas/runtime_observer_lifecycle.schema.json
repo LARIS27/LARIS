@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/runtime_observer_lifecycle.schema.json",
+  "title": "LARIS Runtime Observer Lifecycle Marker",
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entry_attempt_count", "return_probe_count", "ringbuf_reserve_fail_count", "bpf_ringbuf_submit_count", "native_ring_received_count", "native_wire_written_count", "inflight_count", "anomaly_count"],
+      "properties": {
+        "entry_attempt_count": {"type": "integer", "minimum": 0},
+        "return_probe_count": {"type": "integer", "minimum": 0},
+        "ringbuf_reserve_fail_count": {"type": "integer", "minimum": 0},
+        "bpf_ringbuf_submit_count": {"type": "integer", "minimum": 0},
+        "native_ring_received_count": {"type": "integer", "minimum": 0},
+        "native_wire_written_count": {"type": "integer", "minimum": 0},
+        "inflight_count": {"type": "integer", "minimum": 0},
+        "anomaly_count": {"type": "integer", "minimum": 0}
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "marker_type", "run_id", "run_nonce", "runtime_instance_id", "oracle_instance_id", "probe_profile_digest", "expected_target_manifest_digest", "observed_attach_manifest_digest", "attached_at_monotonic_ns", "ready_at_monotonic_ns", "target_elf_digest"],
+      "properties": {
+        "schema_version": {"const": "1.0"},
+        "marker_type": {"const": "OBSERVER_READY"},
+        "run_id": {"type": "string", "minLength": 1},
+        "run_nonce": {"type": "string", "minLength": 16},
+        "runtime_instance_id": {"$ref": "#/$defs/digest"},
+        "oracle_instance_id": {"$ref": "#/$defs/digest"},
+        "probe_profile_digest": {"$ref": "#/$defs/digest"},
+        "expected_target_manifest_digest": {"$ref": "#/$defs/digest"},
+        "observed_attach_manifest_digest": {"$ref": "#/$defs/digest"},
+        "attached_at_monotonic_ns": {"type": "integer", "minimum": 0},
+        "ready_at_monotonic_ns": {"type": "integer", "minimum": 0},
+        "target_elf_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "marker_type", "run_id", "run_nonce", "runtime_instance_id", "oracle_instance_id", "observed_at_monotonic_ns", "counters"],
+      "properties": {
+        "schema_version": {"const": "1.0"},
+        "marker_type": {"const": "OBSERVER_DRAIN_READY"},
+        "run_id": {"type": "string", "minLength": 1},
+        "run_nonce": {"type": "string", "minLength": 16},
+        "runtime_instance_id": {"$ref": "#/$defs/digest"},
+        "oracle_instance_id": {"$ref": "#/$defs/digest"},
+        "observed_at_monotonic_ns": {"type": "integer", "minimum": 0},
+        "counters": {"$ref": "#/$defs/counters"}
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "marker_type", "run_id", "run_nonce", "runtime_instance_id", "driver_completion_digest", "stopped_at_monotonic_ns", "stopped_thread_count"],
+      "properties": {
+        "schema_version": {"const": "1.0"},
+        "marker_type": {"const": "TARGET_STOPPED"},
+        "run_id": {"type": "string", "minLength": 1},
+        "run_nonce": {"type": "string", "minLength": 16},
+        "runtime_instance_id": {"$ref": "#/$defs/digest"},
+        "driver_completion_digest": {"$ref": "#/$defs/digest"},
+        "stopped_at_monotonic_ns": {"type": "integer", "minimum": 0},
+        "stopped_thread_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "marker_type", "run_id", "run_nonce", "runtime_instance_id", "oracle_instance_id", "observed_quiescent_manifest_digest", "detached_at_monotonic_ns", "counters"],
+      "properties": {
+        "schema_version": {"const": "1.0"},
+        "marker_type": {"const": "OBSERVER_DETACHED"},
+        "run_id": {"type": "string", "minLength": 1},
+        "run_nonce": {"type": "string", "minLength": 16},
+        "runtime_instance_id": {"$ref": "#/$defs/digest"},
+        "oracle_instance_id": {"$ref": "#/$defs/digest"},
+        "observed_quiescent_manifest_digest": {"$ref": "#/$defs/digest"},
+        "detached_at_monotonic_ns": {"type": "integer", "minimum": 0},
+        "counters": {"$ref": "#/$defs/counters"}
+      }
+    }
+  ]
+}

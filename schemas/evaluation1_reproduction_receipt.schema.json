@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.example/schemas/evaluation1_reproduction_receipt.schema.json",
+  "title": "Evaluation1 public reproduction receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "release_id", "model_id", "mode", "checkpoint_id", "user_ref", "bundle_sha256", "verification_status", "query_sha256", "response_sha256"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "release_id": {"type": "string", "minLength": 1},
+    "model_id": {"type": "string", "minLength": 1},
+    "mode": {"enum": ["PROXY", "LOG_LINKED"]},
+    "checkpoint_id": {"type": "string", "pattern": "^C[1-6]$"},
+    "user_ref": {"type": "string", "pattern": "^U(0[1-9]|10)$"},
+    "bundle_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "verification_status": {"enum": ["VERIFIED", "FAILED"]},
+    "query_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "response_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "recall_match": {"type": "boolean"},
+    "created_utc": {"type": "string", "format": "date-time"}
+  }
+}

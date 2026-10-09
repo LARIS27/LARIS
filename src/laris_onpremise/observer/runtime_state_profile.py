@@ -1,0 +1,40 @@
+"""Compatibility import for the relocated runtime-state profile."""
+
+from laris_onpremise.kv_state.observation.runtime_state_profile import (
+    PINNED_LLAMA_CPP_COMMIT,
+    QUALIFIED_MODEL_PROFILE_ID,
+    QUALIFIED_MODEL_SHA256,
+    REQUIRED_LAUNCH_ARGUMENTS,
+    RuntimeStateAbiManifest,
+    RuntimeStateAbiOffsets,
+    RuntimeStateObserverProfile,
+    RuntimeStateProbeTarget,
+    RuntimeStateProfileError,
+    RuntimeStateQualificationProbeAuthority,
+    RuntimeStateSymbols,
+    load_runtime_state_observer_profile,
+    load_runtime_state_qualification_probe_authority,
+    load_runtime_state_qualification_probe_profile,
+    runtime_state_profile_from_document,
+    runtime_state_qualification_probe_profile_from_documents,
+    validate_runtime_state_capture_mode,
+)
+
+__all__ = [
+    "PINNED_LLAMA_CPP_COMMIT",
+    "QUALIFIED_MODEL_PROFILE_ID",
+    "QUALIFIED_MODEL_SHA256",
+    "REQUIRED_LAUNCH_ARGUMENTS",
+    "RuntimeStateAbiOffsets",
+    "RuntimeStateAbiManifest",
+    "RuntimeStateObserverProfile",
+    "RuntimeStateQualificationProbeAuthority",
+    "RuntimeStateProbeTarget",
+    "RuntimeStateProfileError",
+    "RuntimeStateSymbols",
+    "load_runtime_state_qualification_probe_authority",
+    "load_runtime_state_qualification_probe_profile",
+    "load_runtime_state_observer_profile",
+    "runtime_state_qualification_probe_profile_from_documents",
+    "runtime_state_profile_from_document",
+]

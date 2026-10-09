@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/runtime_oracle_event.schema.json",
+  "title": "LARIS Independent Runtime Observer Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "run_nonce",
+    "oracle_instance_id",
+    "event_counter",
+    "event_type",
+    "runtime_instance_id",
+    "host_boot_id",
+    "clock_id",
+    "decode_entry_monotonic_ns",
+    "decode_return_monotonic_ns",
+    "wall_time_ns",
+    "decode_call_id",
+    "context_ref",
+    "observed_seq_ids",
+    "batch_n_tokens",
+    "decode_return_code"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "run_nonce": {"type": "string", "minLength": 16},
+    "oracle_instance_id": {"type": "string", "minLength": 1},
+    "event_counter": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "The JSONL stream starts at 1 and is continuous without gaps."
+    },
+    "event_type": {"const": "decode_observed"},
+    "runtime_instance_id": {"type": "string", "minLength": 1},
+    "host_boot_id": {"type": "string", "minLength": 1},
+    "clock_id": {"const": "CLOCK_MONOTONIC"},
+    "decode_entry_monotonic_ns": {"type": "integer", "minimum": 0},
+    "decode_return_monotonic_ns": {"type": "integer", "minimum": 0},
+    "wall_time_ns": {"type": "integer", "minimum": 0},
+    "decode_call_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Exactly oracle_instance_id + ':' + decimal event_counter."
+    },
+    "context_ref": {
+      "type": "string",
+      "minLength": 1,
+      "not": {"pattern": "^0x[0-9a-fA-F]+$"}
+    },
+    "observed_seq_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "integer", "minimum": 0},
+      "uniqueItems": true
+    },
+    "batch_n_tokens": {"type": "integer", "minimum": 1},
+    "decode_return_code": {"type": "integer"}
+  }
+}

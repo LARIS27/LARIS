@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.invalid/schemas/rehost_metadata.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_kind", "prompt_contract", "runtime"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "contract_kind": {"const": "laris_rehost_runtime"},
+    "prompt_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["api", "template_policy"],
+      "properties": {
+        "api": {"const": "llama_cpp_chat"},
+        "template_policy": {"const": "gguf_default"}
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_runtime_profile_digest", "llama_cpp_commit", "memory_family",
+        "n_batch", "n_ubatch", "cache_type_k", "cache_type_v",
+        "flash_attention", "n_gpu_layers", "context_shift", "cache_prompt",
+        "cache_idle_slots"
+      ],
+      "properties": {
+        "source_runtime_profile_digest": {"pattern": "^sha256:[0-9a-f]{64}$"},
+        "llama_cpp_commit": {"pattern": "^[0-9a-f]{40}$"},
+        "memory_family": {"const": "simple_kv"},
+        "n_batch": {"type": "integer", "minimum": 1},
+        "n_ubatch": {"type": "integer", "minimum": 1},
+        "cache_type_k": {"type": "string"},
+        "cache_type_v": {"type": "string"},
+        "flash_attention": {"type": "boolean"},
+        "n_gpu_layers": {"type": "integer", "minimum": 0},
+        "context_shift": {"type": "boolean"},
+        "cache_prompt": {"type": "boolean"},
+        "cache_idle_slots": {"type": "boolean"}
+      }
+    }
+  }
+}

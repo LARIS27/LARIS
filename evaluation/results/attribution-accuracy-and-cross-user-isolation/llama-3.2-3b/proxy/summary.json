@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "paper-main-20260913-25ab496-r4",
+  "stage": "E4_MAIN",
+  "condition": "PROXY",
+  "model_id": "llama-3.2-3b-instruct-q4-k-m",
+  "cell_id": "K4",
+  "actor_count": 10,
+  "checkpoint_count": 6,
+  "source_request_count": 180,
+  "bundle_count": 60,
+  "rehost_request_count": 180,
+  "product_source_commit": "dbc03e627121f44783932a16826808d7fd67aafb",
+  "corpus_sha256": "sha256:c57d1000fc5f4b153c344562e8ba6d9ffaefc1f3636d86866b77af6d757f62ea",
+  "native_transcript_sha256": "sha256:927b5f3cbe7fc1b67d8a54c911d146c92eb666c96fc875873640b3d2e1ceafb7",
+  "main_transcript_sha256": "sha256:c669fa05820184a6992a705f864457c68208ac66dc67fde39fbab840a367fb77",
+  "main_run_record_sha256": "sha256:88e75272b0ecab014b40895a2687b9cbb8805d41c2b20ae595096df5e6921a24",
+  "question_match_count": 180,
+  "source_active_prefix_match_count": 180,
+  "source_replay_trace_match_count": 180,
+  "response_exact_match": {"matched": 177, "total": 180, "rate": 0.9833333333333333},
+  "labeled_field_value_match": {"matched": 885, "total": 900, "rate": 0.9833333333333333},
+  "native_correct_field_preservation": {"preserved": 855, "native_correct": 870, "lost": 15, "rate": 0.9827586206896551},
+  "recall": {"correct_fields": 855, "field_opportunities": 900, "complete_records": 171, "records": 180, "rate": 0.95},
+  "same_failed_records_as_native": 6,
+  "additional_failed_records": [
+    {"actor_code": "U03", "checkpoint_id": "C3", "record_id": "R08", "native_correct_fields": 5, "rehost_correct_fields": 0, "cause": "UNDETERMINED"},
+    {"actor_code": "U06", "checkpoint_id": "C3", "record_id": "R08", "native_correct_fields": 5, "rehost_correct_fields": 0, "cause": "UNDETERMINED"},
+    {"actor_code": "U04", "checkpoint_id": "C6", "record_id": "R16", "native_correct_fields": 5, "rehost_correct_fields": 0, "cause": "UNDETERMINED"}
+  ],
+  "attribution": {
+    "correct": 180,
+    "incorrect": 0,
+    "unresolved": 0,
+    "missing": 0,
+    "CERTIFIED": 60,
+    "identity_key_count": 1,
+    "cross_actor_owner_count": 0,
+    "oracle_method": "authenticated_proxy_request_and_committed_lease"
+  },
+  "response_error_counts": {
+    "same_actor_wrong_record_fields": 10,
+    "same_actor_wrong_record_responses": 2,
+    "cross_actor_fields": 0,
+    "cross_actor_responses": 0,
+    "unknown_opaque_codes": 0,
+    "literal_unknown_fields": 0,
+    "unrecognized_fields": 35
+  },
+  "paired_field_matrix": {"CORRECT/CORRECT": 855, "CORRECT/NOT_CORRECT": 15, "NOT_CORRECT/NOT_CORRECT": 30},
+  "checkpoints": [
+    {"id": "C1", "native_complete": 28, "rehost_complete": 28, "exact_response_matches": 30, "records": 30},
+    {"id": "C2", "native_complete": 30, "rehost_complete": 30, "exact_response_matches": 30, "records": 30},
+    {"id": "C3", "native_complete": 28, "rehost_complete": 26, "exact_response_matches": 28, "records": 30},
+    {"id": "C4", "native_complete": 30, "rehost_complete": 30, "exact_response_matches": 30, "records": 30},
+    {"id": "C5", "native_complete": 29, "rehost_complete": 29, "exact_response_matches": 30, "records": 30},
+    {"id": "C6", "native_complete": 29, "rehost_complete": 28, "exact_response_matches": 29, "records": 30}
+  ],
+  "bundle_payload_storage": {
+    "payload_count": 60,
+    "payload_bytes": 4483894400,
+    "checkpoints": [
+      {"id": "C1", "payload_count": 10, "payload_bytes": 378631700, "min_payload_bytes": 37163500, "max_payload_bytes": 38769300},
+      {"id": "C2", "payload_count": 10, "payload_bytes": 727090300, "min_payload_bytes": 71573500, "max_payload_bytes": 73752800},
+      {"id": "C3", "payload_count": 10, "payload_bytes": 846378300, "min_payload_bytes": 83617000, "max_payload_bytes": 86025700},
+      {"id": "C4", "payload_count": 10, "payload_bytes": 845346000, "min_payload_bytes": 83387600, "max_payload_bytes": 85566900},
+      {"id": "C5", "payload_count": 10, "payload_bytes": 844428400, "min_payload_bytes": 83846400, "max_payload_bytes": 85108100},
+      {"id": "C6", "payload_count": 10, "payload_bytes": 842019700, "min_payload_bytes": 83158200, "max_payload_bytes": 84878700}
+    ]
+  },
+  "timing_scope": "CORRECTNESS_RUN_ONLY_NOT_OVERHEAD_BENCHMARK",
+  "archive_verification_state": "VERIFIED",
+  "archive_verified_file_count": 5903,
+  "source_size_bytes": 38839952654,
+  "archive_size_bytes": 38858116953,
+  "archive_sha256": "sha256:e189f525ed9abc09322ee3902b6c84c6d7e8665e0a68c8cf2abea58065a7b3b4",
+  "archive_manifest_sha256": "sha256:f5118d8ac14773b590727b2e029dc28f46e5d765444c37cfc90e91b820a7a186",
+  "vm_originals_retained": true,
+  "vm_copy_state": "HOST_COPY_VERIFIED_VM_RETAINED",
+  "corpus_models_application_retained": true
+}

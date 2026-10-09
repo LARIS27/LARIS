@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "actors": [
+    {"label": "U01"},
+    {"label": "U02"},
+    {"label": "U03"},
+    {"label": "U04"},
+    {"label": "U05"},
+    {"label": "U06"},
+    {"label": "U07"},
+    {"label": "U08"},
+    {"label": "U09"},
+    {"label": "U10"}
+  ]
+}

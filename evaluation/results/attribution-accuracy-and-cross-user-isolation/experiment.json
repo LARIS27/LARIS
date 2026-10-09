@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "attribution-accuracy-and-cross-user-isolation",
+  "title": "Attribution Accuracy and Cross-User Non-Mixing Verification",
+  "campaign_id": "paper-main-20260913-25ab496-r4",
+  "campaign_revision": "r4",
+  "cell_id": "K4",
+  "actor_count": 10,
+  "checkpoint_ids": ["C1", "C2", "C3", "C4", "C5", "C6"],
+  "model_ids": ["llama-3.2-3b-instruct-q4-k-m", "qwen2.5-7b-instruct-q4-k-m"],
+  "conditions": ["NATIVE", "LOG_LINKED", "PROXY"],
+  "corpus_sha256": "sha256:c57d1000fc5f4b153c344562e8ba6d9ffaefc1f3636d86866b77af6d757f62ea",
+  "product_source_commit": "dbc03e627121f44783932a16826808d7fd67aafb",
+  "state": "TWO_MODEL_K4_ATTRIBUTION_ACCURACY_COMPLETE",
+  "k8_scope": "OUT_OF_SCOPE"
+}

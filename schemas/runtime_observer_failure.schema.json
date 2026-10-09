@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/runtime_observer_failure.schema.json",
+  "title": "LARIS Runtime Observer Failure Marker",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "marker_type", "run_id", "run_nonce", "runtime_instance_id", "oracle_instance_id", "failed_state", "reason_code", "observed_at_monotonic_ns", "counters", "partial_artifacts"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "marker_type": {"const": "OBSERVER_FAILED"},
+    "run_id": {"type": "string", "minLength": 1},
+    "run_nonce": {"type": "string", "minLength": 16},
+    "runtime_instance_id": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+    "oracle_instance_id": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+    "failed_state": {"enum": ["PREPARED", "ATTACHED", "OBSERVER_READY", "STOP", "DRAIN_READY", "TARGET_STOPPED", "DETACH", "DETACHED", "TARGET_TERMINATED"]},
+    "reason_code": {"enum": ["control_protocol_error", "observer_not_ready", "admission_closed", "preflight_failed", "attach_failed", "wire_protocol_error", "target_identity_mismatch", "drain_timeout", "quiescence_failed", "detach_failed", "accounting_mismatch", "native_exit_failed", "termination_failed", "serialization_failed", "publication_failed"]},
+    "observed_at_monotonic_ns": {"type": "integer", "minimum": 0},
+    "counters": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["entry_attempt_count", "return_probe_count", "ringbuf_reserve_fail_count", "bpf_ringbuf_submit_count", "native_ring_received_count", "native_wire_written_count", "inflight_count", "anomaly_count"],
+      "properties": {
+        "entry_attempt_count": {"type": "integer", "minimum": 0},
+        "return_probe_count": {"type": "integer", "minimum": 0},
+        "ringbuf_reserve_fail_count": {"type": "integer", "minimum": 0},
+        "bpf_ringbuf_submit_count": {"type": "integer", "minimum": 0},
+        "native_ring_received_count": {"type": "integer", "minimum": 0},
+        "native_wire_written_count": {"type": "integer", "minimum": 0},
+        "inflight_count": {"type": "integer", "minimum": 0},
+        "anomaly_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "partial_artifacts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["basename", "digest"],
+        "properties": {
+          "basename": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+          "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}

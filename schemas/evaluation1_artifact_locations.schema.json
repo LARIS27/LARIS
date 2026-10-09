@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/laris/evaluation1_artifact_locations.schema.json",
+  "title": "Evaluation1 external artifact locations",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "release_id", "artifacts"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "release_id": {"const": "evaluation1-release-v1"},
+    "artifacts": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["relative_path", "size_bytes", "sha256", "download_url"],
+        "properties": {
+          "relative_path": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$)).+$"
+          },
+          "size_bytes": {"type": "integer", "minimum": 1},
+          "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "download_url": {
+            "oneOf": [
+              {"const": "PENDING_PUBLICATION"},
+              {"type": "string", "pattern": "^https://[^\\s]+$"}
+            ]
+          }
+        }
+      }
+    }
+  }
+}

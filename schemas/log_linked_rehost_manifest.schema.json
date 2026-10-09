@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/log_linked_rehost_manifest.schema.json",
+  "title": "LARIS Log-linked Endpoint Rehost Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "run_id", "bundle_id", "subject_kind",
+    "endpoint_ref", "endpoint_type", "correlation_key_id",
+    "attribution_decision", "session_ref",
+    "request_refs", "attribution_receipt_digest",
+    "source_evidence_package_digest", "source_unit_digests",
+    "model_profile_id", "model_digest", "runtime_profile_digest",
+    "memory_family", "n_ctx", "n_seq_max", "n_stream", "n_layer",
+    "v_trans", "key_ggml_type_id", "value_ggml_type_id",
+    "source_seq_id", "source_stream_index", "destination_sequence_policy",
+    "position_range", "next_position", "payload_format", "payload_file",
+    "payload_size_bytes", "payload_digest", "contains_raw_prompt",
+    "contains_raw_response", "contains_explicit_token_history", "restore_api"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^run-[A-Za-z0-9._-]{1,191}$"},
+    "bundle_id": {"type": "string", "pattern": "^rb_[0-9a-f]{64}$"},
+    "subject_kind": {"const": "ENDPOINT_REF"},
+    "endpoint_ref": {"type": "string", "pattern": "^[A-Za-z0-9_-]{43}$"},
+    "endpoint_type": {"enum": ["IPV4", "IPV6"]},
+    "correlation_key_id": {"$ref": "#/$defs/safeId"},
+    "attribution_decision": {"enum": ["CERTIFIED", "RANKED"]},
+    "session_ref": {"type": "string", "pattern": "^sr_[0-9a-f]{64}$"},
+    "request_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/safeId"}},
+    "attribution_receipt_digest": {"$ref": "#/$defs/sha256"},
+    "source_evidence_package_digest": {"$ref": "#/$defs/sha256"},
+    "source_unit_digests": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}},
+    "model_profile_id": {"$ref": "#/$defs/safeId"},
+    "model_digest": {"$ref": "#/$defs/sha256"},
+    "runtime_profile_digest": {"$ref": "#/$defs/sha256"},
+    "memory_family": {"const": "simple_kv"},
+    "n_ctx": {"type": "integer", "minimum": 1},
+    "n_seq_max": {"type": "integer", "minimum": 1},
+    "n_stream": {"type": "integer", "minimum": 1},
+    "n_layer": {"type": "integer", "minimum": 1},
+    "v_trans": {"type": "boolean"},
+    "key_ggml_type_id": {"type": "integer", "minimum": 0},
+    "value_ggml_type_id": {"type": "integer", "minimum": 0},
+    "source_seq_id": {"type": "integer", "minimum": 0},
+    "source_stream_index": {"type": "integer", "minimum": 0},
+    "destination_sequence_policy": {"const": "caller_selected_empty_sequence"},
+    "position_range": {"$ref": "#/$defs/range"},
+    "next_position": {"type": "integer", "minimum": 1},
+    "payload_format": {"const": "llama-simple-kv-seq-payload-v1"},
+    "payload_file": {"const": "runtime_state_payload.bin"},
+    "payload_size_bytes": {"type": "integer", "minimum": 1},
+    "payload_digest": {"$ref": "#/$defs/sha256"},
+    "contains_raw_prompt": {"const": false},
+    "contains_raw_response": {"const": false},
+    "contains_explicit_token_history": {"const": false},
+    "restore_api": {"const": "llama_state_seq_set_data_ext"}
+  },
+  "$defs": {
+    "safeId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,191}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "range": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "prefixItems": [
+        {"type": "integer", "minimum": 0},
+        {"type": "integer", "minimum": 0}
+      ],
+      "items": false
+    }
+  }
+}

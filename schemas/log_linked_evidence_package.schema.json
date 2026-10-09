@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/log_linked_evidence_package.schema.json",
+  "title": "LARIS Log-linked Attribution Evidence Package Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "package_id", "adapter_id", "runtime_instance_id",
+    "created_at_utc_ns", "application_log_file", "application_log_size_bytes",
+    "application_log_digest", "log_provenance_file", "log_provenance_digest",
+    "observer_terminal_seal_file", "observer_terminal_seal_digest",
+    "writer_capture_receipt_file", "writer_capture_receipt_digest",
+    "state_units_root", "state_unit_manifest_digests", "file_inventory",
+    "normalized_application_events_file", "normalized_application_events_digest",
+    "attribution_results_file", "attribution_results_digest",
+    "endpoint_derivation_receipt_file", "endpoint_derivation_receipt_digest",
+    "evaluation_metrics_file", "evaluation_metrics_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "package_id": {"type": "string", "pattern": "^lep_[0-9a-f]{64}$"},
+    "adapter_id": {"$ref": "#/$defs/safeId"},
+    "runtime_instance_id": {"$ref": "#/$defs/safeId"},
+    "created_at_utc_ns": {"type": "integer", "minimum": 0},
+    "application_log_file": {"$ref": "#/$defs/relativePath"},
+    "application_log_size_bytes": {"type": "integer", "minimum": 1},
+    "application_log_digest": {"$ref": "#/$defs/sha256"},
+    "log_provenance_file": {"$ref": "#/$defs/relativePath"},
+    "log_provenance_digest": {"$ref": "#/$defs/sha256"},
+    "observer_terminal_seal_file": {"$ref": "#/$defs/relativePath"},
+    "observer_terminal_seal_digest": {"$ref": "#/$defs/sha256"},
+    "writer_capture_receipt_file": {"$ref": "#/$defs/relativePath"},
+    "writer_capture_receipt_digest": {"$ref": "#/$defs/sha256"},
+    "state_units_root": {"$ref": "#/$defs/relativePath"},
+    "state_unit_manifest_digests": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/sha256"}, "uniqueItems": true},
+    "file_inventory": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "size_bytes", "sha256"],
+        "properties": {
+          "path": {"$ref": "#/$defs/relativePath"},
+          "size_bytes": {"type": "integer", "minimum": 0},
+          "sha256": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "normalized_application_events_file": {"$ref": "#/$defs/relativePath"},
+    "normalized_application_events_digest": {"$ref": "#/$defs/sha256"},
+    "attribution_results_file": {"$ref": "#/$defs/relativePath"},
+    "attribution_results_digest": {"$ref": "#/$defs/sha256"},
+    "endpoint_derivation_receipt_file": {"$ref": "#/$defs/relativePath"},
+    "endpoint_derivation_receipt_digest": {"$ref": "#/$defs/sha256"},
+    "evaluation_metrics_file": {"anyOf": [{"$ref": "#/$defs/relativePath"}, {"type": "null"}]},
+    "evaluation_metrics_digest": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+  },
+  "$defs": {
+    "safeId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,191}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[^\\u0000]+$"
+    }
+  }
+}

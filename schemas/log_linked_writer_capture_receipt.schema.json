@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/log_linked_writer_capture_receipt.schema.json",
+  "title": "LARIS Log-linked Writer Capture Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "capture_mode", "runtime_instance_id", "runtime_pid",
+    "runtime_start_time_ticks", "runtime_executable_digest",
+    "observer_profile_digest", "apply_count", "unit_count", "fragment_count",
+    "copied_byte_count", "native_ring_frame_count",
+    "native_ring_high_water_mark", "native_ring_high_water_unit",
+    "persistence_queue_high_water_mark", "observer_cpu_time_ns",
+    "safe_failure_counts", "contains_prompt_text", "contains_response_text",
+    "contains_token_ids", "contains_endpoint_values", "contains_request_refs",
+    "contains_private_truth"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "capture_mode": {"const": "writer-boundary"},
+    "runtime_instance_id": {"$ref": "#/$defs/runtimeInstanceId"},
+    "runtime_pid": {"type": "integer", "minimum": 1},
+    "runtime_start_time_ticks": {"type": "integer", "minimum": 1},
+    "runtime_executable_digest": {"$ref": "#/$defs/sha256"},
+    "observer_profile_digest": {"$ref": "#/$defs/sha256"},
+    "apply_count": {"type": "integer", "minimum": 0},
+    "unit_count": {"type": "integer", "minimum": 0},
+    "fragment_count": {"type": "integer", "minimum": 0},
+    "copied_byte_count": {"type": "integer", "minimum": 0},
+    "native_ring_frame_count": {"type": "integer", "minimum": 0},
+    "native_ring_high_water_mark": {"type": "integer", "minimum": 0},
+    "native_ring_high_water_unit": {"const": "FRAMES_PER_SEALED_UNIT"},
+    "persistence_queue_high_water_mark": {"type": "integer", "minimum": 0},
+    "observer_cpu_time_ns": {"type": "integer", "minimum": 0},
+    "safe_failure_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ring_reserve_failure_count", "user_memory_read_failure_count",
+        "unmatched_call_count", "unsupported_mutation_count",
+        "mapping_mutation_count", "final_inflight_count",
+        "incomplete_unit_count", "persistence_failure_count",
+        "terminal_receipt_failure_count"
+      ],
+      "properties": {
+        "ring_reserve_failure_count": {"type": "integer", "minimum": 0},
+        "user_memory_read_failure_count": {"type": "integer", "minimum": 0},
+        "unmatched_call_count": {"type": "integer", "minimum": 0},
+        "unsupported_mutation_count": {"type": "integer", "minimum": 0},
+        "mapping_mutation_count": {"type": "integer", "minimum": 0},
+        "final_inflight_count": {"type": "integer", "minimum": 0},
+        "incomplete_unit_count": {"type": "integer", "minimum": 0},
+        "persistence_failure_count": {"type": "integer", "minimum": 0},
+        "terminal_receipt_failure_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "contains_prompt_text": {"const": false},
+    "contains_response_text": {"const": false},
+    "contains_token_ids": {"const": false},
+    "contains_endpoint_values": {"const": false},
+    "contains_request_refs": {"const": false},
+    "contains_private_truth": {"const": false}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "runtimeInstanceId": {
+      "type": "string",
+      "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9._-]{0,191}|sha256:[0-9a-f]{64})$"
+    }
+  }
+}

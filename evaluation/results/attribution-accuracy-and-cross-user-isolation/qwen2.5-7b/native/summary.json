@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "paper-main-20260913-25ab496-r4",
+  "stage": "E3_NATIVE",
+  "condition": "NATIVE",
+  "model_id": "qwen2.5-7b-instruct-q4-k-m",
+  "cell_id": "K4",
+  "comparison": "HISTORICAL_MATCHED_CHECKPOINT",
+  "actor_count": 10,
+  "checkpoint_count": 6,
+  "total_native_journal_trials": 360,
+  "matched_checkpoint_trials": 180,
+  "excluded_final_window_control_trials": 180,
+  "corpus_sha256": "sha256:c57d1000fc5f4b153c344562e8ba6d9ffaefc1f3636d86866b77af6d757f62ea",
+  "transcript_sha256": "sha256:49e1c32b0e8c02cd84a59d2a3b65ef25ab4323c7a8278cf416a81fb6c040699c",
+  "recall": {"correct_fields": 882, "field_opportunities": 900, "complete_records": 173, "records": 180, "rate": 0.98},
+  "response_error_counts": {"same_actor_wrong_record_fields": 5, "same_actor_wrong_record_responses": 2, "cross_actor_fields": 0, "cross_actor_responses": 0, "unknown_opaque_codes": 8, "literal_unknown_fields": 0, "unrecognized_fields": 5},
+  "checkpoints": [
+    {"id": "C1", "complete_records": 26, "correct_fields": 142, "records": 30},
+    {"id": "C2", "complete_records": 30, "correct_fields": 150, "records": 30},
+    {"id": "C3", "complete_records": 30, "correct_fields": 150, "records": 30},
+    {"id": "C4", "complete_records": 27, "correct_fields": 140, "records": 30},
+    {"id": "C5", "complete_records": 30, "correct_fields": 150, "records": 30},
+    {"id": "C6", "complete_records": 30, "correct_fields": 150, "records": 30}
+  ],
+  "timing_scope": "CORRECTNESS_RUN_ONLY_NOT_OVERHEAD_BENCHMARK"
+}

@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/runtime_observer_evaluation_binding.schema.json",
+  "title": "LARIS Runtime Observer Evaluation Binding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "run_nonce",
+    "oracle_instance_id",
+    "runtime_instance_id",
+    "host_boot_id",
+    "server_pid",
+    "server_start_time_ticks",
+    "supervisor_pid",
+    "supervisor_start_time_ticks",
+    "native_collector_pid",
+    "native_collector_start_time_ticks",
+    "configured_context_ref",
+    "clock_id",
+    "probe_profile",
+    "abi_layout_manifest",
+    "expected_target_manifest",
+    "observed_attach_manifest",
+    "observed_quiescent_manifest",
+    "target_terminated",
+    "source_commit",
+    "server_binary_digest",
+    "mapped_libllama_digest",
+    "model_digest",
+    "server_config_digest",
+    "build_command_digest",
+    "bpf_object_digest",
+    "native_collector_digest",
+    "native_dependency_manifest_digest",
+    "supervisor_source_bundle_digest",
+    "supervisor_interpreter_digest",
+    "loaded_bpf_program_tags",
+    "loaded_bpf_program_tags_digest",
+    "wire_protocol_version",
+    "runtime_oracle_schema_version",
+    "qualified_toolchain_profile",
+    "runtime_build_profile_digest",
+    "observer_artifact_profile_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "run_nonce": {"type": "string", "minLength": 16},
+    "oracle_instance_id": {"$ref": "#/$defs/sha256"},
+    "runtime_instance_id": {"$ref": "#/$defs/sha256"},
+    "host_boot_id": {"type": "string", "minLength": 1},
+    "server_pid": {"type": "integer", "minimum": 1},
+    "server_start_time_ticks": {"type": "integer", "minimum": 1},
+    "supervisor_pid": {"type": "integer", "minimum": 1},
+    "supervisor_start_time_ticks": {"type": "integer", "minimum": 1},
+    "native_collector_pid": {"type": "integer", "minimum": 1},
+    "native_collector_start_time_ticks": {"type": "integer", "minimum": 1},
+    "configured_context_ref": {"type": "string", "minLength": 1},
+    "clock_id": {"const": "CLOCK_MONOTONIC"},
+    "probe_profile": {
+      "$ref": "#/$defs/probeProfileSeal"
+    },
+    "abi_layout_manifest": {
+      "$ref": "#/$defs/abiLayoutManifestSeal"
+    },
+    "expected_target_manifest": {
+      "$ref": "#/$defs/expectedTargetManifestSeal"
+    },
+    "observed_attach_manifest": {
+      "$ref": "#/$defs/observedAttachManifestSeal"
+    },
+    "observed_quiescent_manifest": {
+      "$ref": "#/$defs/observedQuiescentManifestSeal"
+    },
+    "target_terminated": {
+      "$ref": "#/$defs/targetTerminatedSeal"
+    },
+    "source_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "server_binary_digest": {"$ref": "#/$defs/sha256"},
+    "mapped_libllama_digest": {"$ref": "#/$defs/sha256"},
+    "model_digest": {"$ref": "#/$defs/sha256"},
+    "server_config_digest": {"$ref": "#/$defs/sha256"},
+    "build_command_digest": {"$ref": "#/$defs/sha256"},
+    "bpf_object_digest": {"$ref": "#/$defs/sha256"},
+    "native_collector_digest": {"$ref": "#/$defs/sha256"},
+    "native_dependency_manifest_digest": {"$ref": "#/$defs/sha256"},
+    "supervisor_source_bundle_digest": {"$ref": "#/$defs/sha256"},
+    "supervisor_interpreter_digest": {"$ref": "#/$defs/sha256"},
+    "loaded_bpf_program_tags": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "allOf": [
+            {"$ref": "#/$defs/bpfProgramTag"},
+            {"properties": {"probe_role": {"const": "entry"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/bpfProgramTag"},
+            {"properties": {"probe_role": {"const": "return"}}}
+          ]
+        }
+      ],
+      "items": false
+    },
+    "loaded_bpf_program_tags_digest": {"$ref": "#/$defs/sha256"},
+    "wire_protocol_version": {"const": "1.0"},
+    "runtime_oracle_schema_version": {"const": "2.0"},
+    "qualified_toolchain_profile": {"type": "string", "minLength": 1},
+    "runtime_build_profile_digest": {"$ref": "#/$defs/sha256"},
+    "observer_artifact_profile_digest": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "bpfProgramTag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probe_role", "kernel_tag"],
+      "properties": {
+        "probe_role": {"enum": ["entry", "return"]},
+        "kernel_tag": {"type": "string", "pattern": "^[0-9a-f]{16}$"}
+      }
+    },
+    "sealBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "digest"],
+      "properties": {
+        "file": {"type": "string"},
+        "digest": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "probeProfileSeal": {
+      "allOf": [
+        {"$ref": "#/$defs/sealBase"},
+        {"properties": {"file": {"const": "x86_64_cpu_llama_decode.json"}}}
+      ]
+    },
+    "abiLayoutManifestSeal": {
+      "allOf": [
+        {"$ref": "#/$defs/sealBase"},
+        {"properties": {"file": {"const": "abi_layout_manifest.json"}}}
+      ]
+    },
+    "expectedTargetManifestSeal": {
+      "allOf": [
+        {"$ref": "#/$defs/sealBase"},
+        {"properties": {"file": {"const": "expected_target_manifest.json"}}}
+      ]
+    },
+    "observedAttachManifestSeal": {
+      "allOf": [
+        {"$ref": "#/$defs/sealBase"},
+        {"properties": {"file": {"const": "observed_attach_manifest.json"}}}
+      ]
+    },
+    "observedQuiescentManifestSeal": {
+      "allOf": [
+        {"$ref": "#/$defs/sealBase"},
+        {"properties": {"file": {"const": "observed_quiescent_manifest.json"}}}
+      ]
+    },
+    "targetTerminatedSeal": {
+      "allOf": [
+        {"$ref": "#/$defs/sealBase"},
+        {"properties": {"file": {"const": "TARGET_TERMINATED.json"}}}
+      ]
+    }
+  }
+}

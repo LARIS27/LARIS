@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/selective_deployment_envelope.schema.json",
+  "title": "LARIS Selective Runtime Deployment Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "components",
+    "envelope_digest",
+    "envelope_type",
+    "schema_version"
+  ],
+  "properties": {
+    "components": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "active_targets_receipt",
+        "app_archive",
+        "quarantine_helper",
+        "reinitializer_packet",
+        "reinitializer_script"
+      ],
+      "properties": {
+        "active_targets_receipt": {"$ref": "#/$defs/activeTargetsReceiptComponent"},
+        "app_archive": {"$ref": "#/$defs/appArchiveComponent"},
+        "quarantine_helper": {"$ref": "#/$defs/plainComponent"},
+        "reinitializer_packet": {"$ref": "#/$defs/packetComponent"},
+        "reinitializer_script": {"$ref": "#/$defs/plainComponent"}
+      }
+    },
+    "envelope_digest": {"$ref": "#/$defs/sha256"},
+    "envelope_type": {"const": "selective_runtime_reinitialization"},
+    "schema_version": {"const": "1.0"}
+  },
+  "$defs": {
+    "basename": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,190}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "appArchiveComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file_name", "inventory_digest", "sha256", "size_bytes"],
+      "properties": {
+        "file_name": {"$ref": "#/$defs/basename"},
+        "inventory_digest": {"$ref": "#/$defs/sha256"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1, "maximum": 2147483648}
+      }
+    },
+    "activeTargetsReceiptComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file_name", "inventory_digest", "sha256", "size_bytes"],
+      "properties": {
+        "file_name": {"const": "active-targets-receipt.json"},
+        "inventory_digest": {"type": "null"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1, "maximum": 1048576}
+      }
+    },
+    "packetComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file_name", "inventory_digest", "sha256", "size_bytes"],
+      "properties": {
+        "file_name": {"$ref": "#/$defs/basename"},
+        "inventory_digest": {"$ref": "#/$defs/sha256"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1, "maximum": 69206016}
+      }
+    },
+    "plainComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file_name", "inventory_digest", "sha256", "size_bytes"],
+      "properties": {
+        "file_name": {"$ref": "#/$defs/basename"},
+        "inventory_digest": {"type": "null"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1, "maximum": 4194304}
+      }
+    }
+  }
+}

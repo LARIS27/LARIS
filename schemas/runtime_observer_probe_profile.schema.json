@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/runtime_observer_probe_profile.schema.json",
+  "title": "LARIS x86_64 CPU Runtime Observer Probe Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_id",
+    "llama_cpp_commit",
+    "os",
+    "architecture",
+    "abi",
+    "target_kind",
+    "symbol_name",
+    "batch_size_bytes",
+    "batch_argument_location",
+    "n_tokens_offset",
+    "n_seq_id_offset",
+    "seq_id_offset",
+    "max_batch_tokens",
+    "allowed_seq_ids",
+    "server_batch_allocation_n_seq_max",
+    "configured_context_ref",
+    "decode_return_type"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "profile_id": {"const": "x86_64-cpu-llama-decode"},
+    "llama_cpp_commit": {
+      "const": "daf6bc9f2d3516d7bda73d191c6a01388aff09c5"
+    },
+    "os": {"const": "Linux"},
+    "architecture": {"const": "x86_64"},
+    "abi": {"const": "System V AMD64"},
+    "target_kind": {"const": "mapped_shared_library"},
+    "symbol_name": {"const": "llama_decode"},
+    "batch_size_bytes": {"const": 56},
+    "batch_argument_location": {"const": "rsp_plus_8"},
+    "n_tokens_offset": {"const": 0},
+    "n_seq_id_offset": {"const": 32},
+    "seq_id_offset": {"const": 40},
+    "max_batch_tokens": {"const": 128},
+    "allowed_seq_ids": {"const": [0, 1, 2, 3]},
+    "server_batch_allocation_n_seq_max": {"const": 1},
+    "configured_context_ref": {"const": "context-main"},
+    "decode_return_type": {"const": "signed_int32"}
+  }
+}

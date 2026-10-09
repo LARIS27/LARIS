@@ -1,0 +1,14 @@
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+*.ps1 text eol=crlf
+evaluation/publication/releases/**/checksums.sha256 text eol=lf
+evaluation/publication/releases/**/licenses/*.txt text eol=lf
+*.png binary
+*.bin binary
+*.tar binary
+*.pyz binary

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.example/schemas/evaluation1_public_bundle_index.schema.json",
+  "title": "Evaluation1 public KV bundle index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "release_id", "model_id", "mode", "subject_ref_kind", "entries"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "release_id": {"type": "string", "minLength": 1},
+    "model_id": {"type": "string", "minLength": 1},
+    "mode": {"enum": ["PROXY", "LOG_LINKED"]},
+    "subject_ref_kind": {"enum": ["USER_HMAC", "ENDPOINT_REF"]},
+    "entries": {
+      "type": "array",
+      "minItems": 60,
+      "maxItems": 60,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["model_id", "mode", "checkpoint_id", "public_user_ref", "subject_ref_kind", "subject_ref", "key_id", "session_ref", "bundle_id", "bundle_path", "payload_sha256", "payload_size_bytes", "source_bundle_manifest_sha256"],
+        "properties": {
+          "model_id": {"type": "string", "minLength": 1},
+          "mode": {"enum": ["PROXY", "LOG_LINKED"]},
+          "checkpoint_id": {"type": "string", "pattern": "^C[1-6]$"},
+          "public_user_ref": {"type": "string", "pattern": "^U(0[1-9]|10)$"},
+          "subject_ref_kind": {"enum": ["USER_HMAC", "ENDPOINT_REF"]},
+          "subject_ref": {"type": "string", "minLength": 1},
+          "key_id": {"type": "string", "minLength": 1},
+          "session_ref": {"type": "string", "minLength": 1},
+          "bundle_id": {"type": "string", "minLength": 1},
+          "bundle_path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"},
+          "payload_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "payload_size_bytes": {"type": "integer", "minimum": 1},
+          "source_bundle_manifest_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}

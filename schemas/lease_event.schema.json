@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/lease_event.schema.json",
+  "title": "LARIS Lease Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "event_type",
+    "lease_id",
+    "request_ref",
+    "runtime_instance_id",
+    "wall_time_ns",
+    "monotonic_ns",
+    "details"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "event_id": {"type": "string", "minLength": 1},
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "request_received",
+        "request_queued",
+        "request_queue_cancelled",
+        "lease_reserved",
+        "dispatch_authorized",
+        "upstream_request_sent",
+        "slot_assignment_confirmed",
+        "terminal_response_received",
+        "slot_idle_confirmed",
+        "runtime_state_capture_started",
+        "runtime_state_acquisition_requested",
+        "runtime_state_acquisition_completed",
+        "runtime_state_payload_committed",
+        "capture_skipped",
+        "lease_released",
+        "lease_unknown",
+        "slot_quarantined",
+        "controller_recovered",
+        "runtime_started",
+        "audit_violation"
+      ]
+    },
+    "lease_id": {"type": ["string", "null"], "minLength": 1},
+    "request_ref": {"type": ["string", "null"], "minLength": 1},
+    "runtime_instance_id": {"type": ["string", "null"], "minLength": 1},
+    "wall_time_ns": {"type": "integer", "minimum": 0},
+    "monotonic_ns": {"type": "integer", "minimum": 0},
+    "details": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_hmac": {"type": "string", "minLength": 1},
+        "identity_key_id": {"type": "string", "minLength": 1},
+        "auth_receipt_id": {"type": "string", "minLength": 1},
+        "session_ref": {"type": "string", "minLength": 1},
+        "connection_ref": {"type": "string", "minLength": 1},
+        "retry_of": {"type": ["string", "null"], "minLength": 1},
+        "request_ref": {"type": "string", "minLength": 1},
+        "runtime_instance_id": {"type": "string", "minLength": 1},
+        "controller_instance_id": {"type": "string", "minLength": 1},
+        "context_ref": {"type": "string", "minLength": 1},
+        "context_ref_source": {"type": "string", "minLength": 1},
+        "expected_slot_id": {"type": ["integer", "null"], "minimum": 0},
+        "expected_seq_id": {"type": ["integer", "null"], "minimum": 0},
+        "response_confirmed_slot_id": {"type": ["integer", "null"], "minimum": 0},
+        "observed_seq_id": {"type": ["integer", "null"], "minimum": 0},
+        "lease_generation": {"type": "integer", "minimum": 1},
+        "slot_epoch": {"type": ["integer", "null"], "minimum": 1},
+        "evidence_ref": {"type": "string", "minLength": 1},
+        "capture_id": {"type": "string", "minLength": 1},
+        "payload_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "payload_size_bytes": {"type": "integer", "minimum": 1},
+        "slot_id": {"type": "integer", "minimum": 0},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "request_received"}}},
+      "then": {"properties": {"details": {"required": ["user_hmac", "identity_key_id", "auth_receipt_id", "session_ref", "connection_ref", "retry_of"], "minProperties": 6, "maxProperties": 6}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"enum": ["request_queued", "request_queue_cancelled", "capture_skipped"]}}},
+      "then": {"properties": {"details": {"required": ["reason"], "minProperties": 1, "maxProperties": 1}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "lease_reserved"}}},
+      "then": {"properties": {"details": {"required": ["user_hmac", "identity_key_id", "auth_receipt_id", "session_ref", "connection_ref", "retry_of", "context_ref", "context_ref_source", "expected_slot_id", "expected_seq_id", "lease_generation"], "minProperties": 11, "maxProperties": 11}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"enum": ["dispatch_authorized", "upstream_request_sent", "slot_idle_confirmed"]}}},
+      "then": {"properties": {"details": {"required": ["evidence_ref"], "minProperties": 1, "maxProperties": 1}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "slot_assignment_confirmed"}}},
+      "then": {"properties": {"details": {"required": ["response_confirmed_slot_id", "slot_epoch", "evidence_ref"], "minProperties": 3, "maxProperties": 3}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "terminal_response_received"}}},
+      "then": {"properties": {"details": {"required": ["evidence_ref", "reason"], "minProperties": 2, "maxProperties": 2}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "runtime_state_capture_started"}}},
+      "then": {"properties": {"details": {"required": ["capture_id"], "minProperties": 1, "maxProperties": 1}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "runtime_state_acquisition_requested"}}},
+      "then": {"properties": {"details": {"required": ["capture_id", "observed_seq_id", "evidence_ref"], "minProperties": 3, "maxProperties": 3}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "runtime_state_acquisition_completed"}}},
+      "then": {"properties": {"details": {"required": ["capture_id", "request_ref", "runtime_instance_id", "slot_id", "slot_epoch", "observed_seq_id", "payload_digest", "payload_size_bytes", "evidence_ref"], "minProperties": 9, "maxProperties": 9}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "runtime_state_payload_committed"}}},
+      "then": {"properties": {"details": {"required": ["capture_id", "payload_digest", "payload_size_bytes", "evidence_ref", "context_ref", "expected_slot_id", "response_confirmed_slot_id", "slot_epoch"], "minProperties": 8, "maxProperties": 8}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "lease_released"}}},
+      "then": {"properties": {"details": {"maxProperties": 0}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "lease_unknown"}}},
+      "then": {"properties": {"details": {"required": ["reason", "controller_instance_id"], "minProperties": 2, "maxProperties": 2}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "slot_quarantined"}}},
+      "then": {"properties": {"details": {"required": ["reason", "evidence_ref"], "minProperties": 2, "maxProperties": 2}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "controller_recovered"}}},
+      "then": {"properties": {"details": {"required": ["controller_instance_id", "reason"], "minProperties": 2, "maxProperties": 2}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "runtime_started"}}},
+      "then": {"properties": {"details": {"required": ["controller_instance_id", "evidence_ref", "reason"], "minProperties": 3, "maxProperties": 3}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "audit_violation"}}},
+      "then": {"properties": {"details": {"required": ["reason", "evidence_ref", "expected_slot_id", "response_confirmed_slot_id", "expected_seq_id", "observed_seq_id"], "minProperties": 6, "maxProperties": 6}}}
+    }
+  ]
+}

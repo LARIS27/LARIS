@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://laris.local/schemas/rehost_bundle_index.schema.json",
+  "title": "LARIS Rehost Bundle Completion Index",
+  "type": "object",
+  "required": ["schema_version", "run_id", "entries"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^run-[A-Za-z0-9._-]{1,191}$"},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "bundle_id", "user_hmac", "session_ref", "state",
+          "rehost_manifest_path", "rehost_manifest_digest", "payload_path",
+          "payload_digest", "payload_size_bytes"
+        ],
+        "properties": {
+          "bundle_id": {"type": "string", "pattern": "^rb_[0-9a-f]{64}$"},
+          "user_hmac": {"type": "string", "pattern": "^[A-Za-z0-9_-]{43}$"},
+          "session_ref": {"type": "string", "pattern": "^sr_[0-9a-f]{64}$"},
+          "state": {"const": "READY"},
+          "rehost_manifest_path": {
+            "type": "string",
+            "pattern": "^users/uh_[A-Za-z0-9_-]{43}/sessions/s_[0-9a-f]{16,64}/rehost_manifest\\.json$"
+          },
+          "rehost_manifest_digest": {"$ref": "#/$defs/sha256"},
+          "payload_path": {
+            "type": "string",
+            "pattern": "^users/uh_[A-Za-z0-9_-]{43}/sessions/s_[0-9a-f]{16,64}/runtime_state_payload\\.bin$"
+          },
+          "payload_digest": {"$ref": "#/$defs/sha256"},
+          "payload_size_bytes": {"type": "integer", "minimum": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

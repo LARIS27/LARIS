@@ -1,0 +1,33 @@
+schema_version: '2.0'
+models:
+- model_id: llama-3.2-3b-instruct-q4-k-m
+  source_repository: meta-llama/Llama-3.2-3B-Instruct
+  source_revision: 0cb88a4f764b7a12671c53f0838cd831a0843b95
+  source_revision_state: FROZEN
+  artifact_filename: Llama-3.2-3B-Instruct-Q4_K_M.gguf
+  artifact_format: GGUF
+  quantization: Q4_K_M
+  artifact_sha256: sha256:880881ac5b02b5bcb449010a1d6cfad09913c421fb78efa8b2aa6a2458b10f6e
+  artifact_size_bytes: 2019377600
+  source_artifacts:
+  - filename: Llama-3.2-3B-Instruct-Q4_K_M.gguf
+    sha256: sha256:880881ac5b02b5bcb449010a1d6cfad09913c421fb78efa8b2aa6a2458b10f6e
+    size_bytes: 2019377600
+  artifact_derivation: NONE
+- model_id: qwen2.5-7b-instruct-q4-k-m
+  source_repository: Qwen/Qwen2.5-7B-Instruct-GGUF
+  source_revision: bb5d59e06d9551d752d08b292a50eb208b07ab1f
+  source_revision_state: FROZEN
+  artifact_filename: qwen2.5-7b-instruct-q4_k_m.gguf
+  artifact_format: GGUF
+  quantization: Q4_K_M
+  artifact_sha256: sha256:1875fb29e8c91c86615c00e92d8b4114e56bc24359adb5a8db8b36452fae4a49
+  artifact_size_bytes: 4683073536
+  source_artifacts:
+  - filename: qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf
+    sha256: sha256:dfce12e3862a5283ccfb88221b48480e58745165de856439950d0f22590580db
+    size_bytes: 3993201344
+  - filename: qwen2.5-7b-instruct-q4_k_m-00002-of-00002.gguf
+    sha256: sha256:539cf93f78e887edea1c04e2d7d8cdaca9d01dae9c9025bcb8accbe29df3d72a
+    size_bytes: 689872288
+  artifact_derivation: LLAMA_GGUF_SPLIT_MERGE
