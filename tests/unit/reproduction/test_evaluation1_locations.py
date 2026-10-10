@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from evaluation.scripts import stage_public_evaluation_release as staging
 from evaluation.scripts.stage_public_evaluation_release import (
     artifact_checklist,
     initialize_release,
@@ -175,6 +176,54 @@ def _metadata_fixture(root: Path) -> tuple[Path, dict[str, bytes]]:
     return root, external_payloads
 
 
+def _download_fixture(root: Path) -> Path:
+    for relative in REQUIRED_EXTERNAL_PATHS:
+        destination = root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(b"downloaded")
+    return root
+
+
+def test_locate_download_release_root_accepts_the_public_folder_layout(
+    tmp_path: Path,
+) -> None:
+    download_root = tmp_path / "LARIS-Evaluation1-Public-v1"
+    release_root = _download_fixture(
+        download_root / "LARIS_Evaluation" / "evaluation1-release-v1"
+    )
+
+    assert staging.locate_download_release_root(download_root) == release_root.resolve()
+
+
+def test_locate_download_release_root_accepts_the_release_directory_itself(
+    tmp_path: Path,
+) -> None:
+    release_root = _download_fixture(tmp_path / "evaluation1-release-v1")
+
+    assert staging.locate_download_release_root(release_root) == release_root.resolve()
+
+
+def test_locate_download_release_root_accepts_a_downloaded_parent_folder(
+    tmp_path: Path,
+) -> None:
+    download_root = tmp_path / "LARIS_Evaluation"
+    release_root = _download_fixture(download_root / "evaluation1-release-v1")
+
+    assert staging.locate_download_release_root(download_root) == release_root.resolve()
+
+
+def test_locate_download_release_root_rejects_ambiguous_duplicate_release(
+    tmp_path: Path,
+) -> None:
+    download_root = _download_fixture(tmp_path / "download")
+    _download_fixture(
+        download_root / "LARIS_Evaluation" / "evaluation1-release-v1"
+    )
+
+    with pytest.raises(ArtifactLocationError, match="exactly one"):
+        staging.locate_download_release_root(download_root)
+
+
 def test_initialize_copies_only_tracked_metadata_and_never_moves_sources(
     tmp_path: Path,
 ) -> None:
@@ -305,8 +354,8 @@ def test_checked_in_location_manifest_matches_verified_release() -> None:
             "sha256:7820484a828bbea5c19dec6e935457482cbde28abdcadbd1d4ed9d19cc21a2e1",
         ),
         "shared-data.tar.gz": (
-            17817,
-            "sha256:314fdcce2249523ec713a428ca49262bb7219629f23a670bcb231208926f378a",
+            17821,
+            "sha256:7ae3d596e8983104d32d1a13aa721b2a83a58dd294bcb2e9d6450eabd48eaccf",
         ),
     }
 
@@ -339,10 +388,10 @@ def test_checked_in_location_manifest_matches_verified_release() -> None:
             "https://drive.usercontent.google.com/download?"
             "id=1OyA209lQJORSIHwbjuXUyIOPfT6sTpAj&export=download&confirm=t"
         ),
-        "shared-data.tar.gz": (
-            "https://drive.usercontent.google.com/download?"
-            "id=1OoRzilk6MUpbHhG99V79FIgbLflDqBgc&export=download&confirm=t"
-        ),
+            "shared-data.tar.gz": (
+                "https://drive.usercontent.google.com/download?"
+                "id=1LwsTPhGp5uq8Qa4yIqn-Chn9KPF1KeDv&export=download&confirm=t"
+            ),
     }
     assert manifest.is_published is True
     assert {

@@ -26,8 +26,12 @@ def _contains_hangul(text: str) -> bool:
 
 
 def _tracked_paths() -> list[str]:
-    output = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT)
-    return sorted(item.decode("utf-8") for item in output.split(b"\0") if item)
+    output = subprocess.check_output(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+        cwd=ROOT,
+    )
+    paths = sorted(item.decode("utf-8") for item in output.split(b"\0") if item)
+    return [path for path in paths if (ROOT / path).is_file()]
 
 
 def _inventory() -> dict[str, object]:
@@ -53,6 +57,8 @@ def test_allowlist_assigns_role_complete_current_source() -> None:
     assert paths["tools/windows/validate_rehost_profile.py"] == "current-operations"
     assert paths["evaluation/scripts/stage_public_evaluation_release.py"] == "evaluation1-reproduction"
     assert paths["evaluation/results/runtime-overhead/llama-3.2-3b/summary.json"] == "public-evaluation"
+    assert paths["evaluation/results/log-linked-correlation/README.md"] == "public-evaluation"
+    assert paths["evaluation/run_records/evaluation1-public-rehost-smoke.json"] == "public-evaluation"
     assert paths["docs/reproducibility/evaluation1-release.md"] == "public-docs"
 
 
@@ -86,9 +92,12 @@ def test_final_inventory_excludes_retired_native_observer_boundary() -> None:
     paths = set(_paths())
     retired_paths = {
         "src/laris_onpremise/runtime_inputs_reader.py",
+        "src/laris_onpremise/rehosting/preparation.py",
+        "tests/unit/rehosting/test_preparation.py",
         "tools/vm/build_clean_node_native.sh",
         "tools/vm/diagnose_uprobe_privilege.sh",
         "tools/vm/qualify_pinned_runtime.py",
+        "tools/vm/run_cumulative_rehosting.sh",
         "src/laris_onpremise/core/policy.py",
         "src/laris_onpremise/core/standalone.py",
         "tools/verify_standalone.py",
@@ -121,7 +130,6 @@ def test_final_inventory_includes_current_config_and_reproduction_tools() -> Non
         "evaluation/scripts/stage_public_evaluation_release.py",
         "evaluation/scripts/verify_public_evaluation_release.py",
         "tools/run_portable_tests_windows.ps1",
-        "tools/vm/run_cumulative_rehosting.sh",
         "tools/wsl/install_rehost_runtime.sh",
     }
     assert required <= paths
@@ -143,6 +151,30 @@ def test_public_cli_has_no_dashboard_or_experiment_control_plane_commands() -> N
     assert "experiment" not in commands
     assert "bundle" not in commands
     assert {"proxy", "log-linked", "rehost", "reproduce"} <= commands
+
+
+def test_public_cli_exposes_only_portable_rehost_workflows() -> None:
+    from laris_onpremise.cli import _parser
+
+    parser = _parser()
+    root_action = next(
+        item for item in parser._actions if getattr(item, "choices", None)
+    )
+    rehost = root_action.choices["rehost"]
+    rehost_action = next(
+        item for item in rehost._actions if getattr(item, "choices", None)
+    )
+
+    assert set(rehost_action.choices) == {"open", "profile"}
+
+
+def test_rehost_analysis_has_no_legacy_inventory_compatibility() -> None:
+    source = (
+        ROOT / "src" / "laris_onpremise" / "rehosting" / "analysis_session.py"
+    ).read_text(encoding="utf-8")
+
+    assert "_LEGACY_ANALYSIS_INVENTORIES" not in source
+    assert "analysis_manifest.json" not in source
 
 
 def test_non_ui_runtime_imports_resolve_without_dashboard_namespace() -> None:

@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "figure": "Figure 3",
+  "record_purpose": "Figure 3 source records",
+  "log_verbosity": "TRACE (4)",
+  "model_id": "llama-3.2-3b-instruct-q4-k-m",
+  "source_root": "pilot/log-linked-20260915T030139Z-3562",
+  "evidence_root": "log-linked-stages/c1/run-log-linked-smoke-20260915T030156Z-3686/evidence",
+  "sources": {
+    "application_log": {
+      "path": "source/raw_llama_server.log",
+      "sha256": "sha256:bff29968a0779ba836a426c2327e9dd16f002edb7a5efaa91291a05a384171c9",
+      "original_relative_path": "application/raw_llama_server.log"
+    },
+    "normalized_application_events": {
+      "path": "source/normalized_application_events.jsonl",
+      "sha256": "sha256:5424d629b6f275eba7d63015d48ef6931e3716bd23efe82ce8b1088eb5d61992",
+      "original_relative_path": "package/derived/normalized_application_events.jsonl"
+    },
+    "attribution_results": {
+      "path": "source/attribution_results.jsonl",
+      "sha256": "sha256:7f34c7c15ac88b5087977d763357c52194521d7c226af42722506af6e878860f",
+      "original_relative_path": "package/derived/attribution_results.jsonl"
+    }
+  },
+  "paper_selection": {
+    "application_log_rows": [52, 60, 74, 75, 123, 124],
+    "slot_task_pairs": [[0, 7], [2, 6]]
+  },
+  "supplementary_same_trace_context": {
+    "application_log_rows": [52, 55, 60, 74, 75, 98, 99, 123, 124],
+    "slot_task_pairs": [[0, 7], [1, 5], [2, 6]]
+  },
+  "paper_transformations": [
+    "selected rows retained in source order",
+    "endpoint labels replaced with documentation-only addresses",
+    "line-number gutter and explanatory styling added"
+  ],
+  "unchanged_fields": [
+    "timestamp",
+    "slot_id",
+    "task_id",
+    "token_count",
+    "event_order",
+    "http_status"
+  ]
+}

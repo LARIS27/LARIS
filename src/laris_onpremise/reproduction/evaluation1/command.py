@@ -1,4 +1,4 @@
-"""Reviewer-facing Evaluation1 reproduction commands."""
+"""Public Evaluation1 reproduction commands."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ from argparse import Namespace
 from pathlib import Path
 from typing import Callable, Sequence, TextIO
 
+from laris_onpremise.rehosting.catalog import PortableBundleCatalog
 from laris_onpremise.rehosting.open_command import open_main as rehost_open_main
 
 from .contracts import CaptureMode
@@ -47,11 +48,11 @@ def add_parser(subcommands: argparse._SubParsersAction[argparse.ArgumentParser])
     rehost.add_argument("--analysis-root", type=Path)
     rehost.add_argument("--timeout-seconds", type=int, default=120)
     rehost.add_argument("--predict", type=int, default=128)
-    rehost.add_argument("--temperature", type=float, default=0.0)
+    rehost.add_argument("--temperature", type=float, default=1.0)
     rehost.add_argument("--top-k", type=int, default=1)
     rehost.add_argument("--top-p", type=float, default=1.0)
-    rehost.add_argument("--min-p", type=float, default=0.0)
-    rehost.add_argument("--seed", type=int, default=0)
+    rehost.add_argument("--min-p", type=float, default=1.0)
+    rehost.add_argument("--seed", type=int, default=20260907)
     rehost.add_argument("--analysis-mode", choices=("simple", "session"), default="simple")
     rehost.add_argument("--json", action="store_true")
 
@@ -77,11 +78,11 @@ def build_parser() -> argparse.ArgumentParser:
     rehost.add_argument("--analysis-root", type=Path)
     rehost.add_argument("--timeout-seconds", type=int, default=120)
     rehost.add_argument("--predict", type=int, default=128)
-    rehost.add_argument("--temperature", type=float, default=0.0)
+    rehost.add_argument("--temperature", type=float, default=1.0)
     rehost.add_argument("--top-k", type=int, default=1)
     rehost.add_argument("--top-p", type=float, default=1.0)
-    rehost.add_argument("--min-p", type=float, default=0.0)
-    rehost.add_argument("--seed", type=int, default=0)
+    rehost.add_argument("--min-p", type=float, default=1.0)
+    rehost.add_argument("--seed", type=int, default=20260907)
     rehost.add_argument("--analysis-mode", choices=("simple", "session"), default="simple")
     rehost.add_argument("--json", action="store_true")
     recall = commands.add_parser("verify-recall")
@@ -157,19 +158,29 @@ def run(
 
     with tempfile.TemporaryDirectory(prefix="laris-evaluation1-") as temporary:
         temporary_root = Path(temporary)
-        bundle_root = temporary_root / "bundle"
+        staged_bundle_root = temporary_root / "staged-bundle"
         release.materialize(
             arguments.model_id,
             arguments.mode,
             arguments.checkpoint_id,
             arguments.user_ref,
-            bundle_root,
+            staged_bundle_root,
         )
+        source_run_id = PortableBundleCatalog.open(
+            staged_bundle_root,
+        ).source_run_id
+        run_root = temporary_root / source_run_id
+        run_root.mkdir()
+        bundle_root = run_root / "bundle"
+        staged_bundle_root.rename(bundle_root)
         if arguments.question_file is None:
             release.validate_record(arguments.checkpoint_id, arguments.record_id)
             question_file = temporary_root / "question.txt"
             question_file.write_text(
-                release.question(arguments.checkpoint_id, arguments.record_id),
+                release.question(
+                    arguments.checkpoint_id,
+                    arguments.record_id,
+                ).rstrip("\r\n"),
                 encoding="utf-8",
             )
         else:

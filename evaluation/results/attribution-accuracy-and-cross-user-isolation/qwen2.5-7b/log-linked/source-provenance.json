@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "run_kind": "Evaluation1 main Log-linked",
+  "model_id": "qwen2.5-7b-instruct-q4-k-m",
+  "source_archive": {
+    "sha256": "sha256:a3d7f29957d76730cb79db4f433d669ac48d40aa562bcc129315bfdafde89d9c",
+    "manifest_sha256": "sha256:1b8bc8233bdd8b5533295adde660814f568148495cdcfd6b14f24b1fb918a5db",
+    "size_bytes": 26830607493
+  },
+  "checkpoints": [
+    {
+      "checkpoint_id": "C1",
+      "application_log": {"path": "source/c1/raw_llama_server.log", "original_relative_path": "log-linked-stages/c1/run-log-linked-smoke-20260918T031518Z-34636/evidence/application/raw_llama_server.log", "size_bytes": 102817, "sha256": "sha256:63849a0a0c75f10d42fe18602e5df2df5cae15efa97015b0363d0ad5cbc886ba"},
+      "normalized_application_events": {"path": "source/c1/normalized_application_events.jsonl", "original_relative_path": "log-linked-stages/c1/run-log-linked-smoke-20260918T031518Z-34636/evidence/package/derived/normalized_application_events.jsonl", "size_bytes": 79148, "sha256": "sha256:20d683ce94c01d02160154c01f0b6281445843c25360846f46583bf89fd9f8e8"},
+      "attribution_results": {"path": "source/c1/attribution_results.jsonl", "original_relative_path": "log-linked-stages/c1/run-log-linked-smoke-20260918T031518Z-34636/evidence/package/derived/attribution_results.jsonl", "size_bytes": 73339, "sha256": "sha256:bc08d57215c494ed3eddfc75aebddff17f7f2f85c4675daf77d344e930f98b4b"}
+    },
+    {
+      "checkpoint_id": "C2",
+      "application_log": {"path": "source/c2/raw_llama_server.log", "original_relative_path": "log-linked-stages/c2/run-log-linked-smoke-20260918T032405Z-34636/evidence/application/raw_llama_server.log", "size_bytes": 130451, "sha256": "sha256:8cddd09287204377a6bbed0758c6c1a668c8d9bee6a541129cb74c6b12ddbd91"},
+      "normalized_application_events": {"path": "source/c2/normalized_application_events.jsonl", "original_relative_path": "log-linked-stages/c2/run-log-linked-smoke-20260918T032405Z-34636/evidence/package/derived/normalized_application_events.jsonl", "size_bytes": 79315, "sha256": "sha256:aa7e5d4c89c9ebe827010532e678fa61ae7f9211558b3782627e06ef936f03c5"},
+      "attribution_results": {"path": "source/c2/attribution_results.jsonl", "original_relative_path": "log-linked-stages/c2/run-log-linked-smoke-20260918T032405Z-34636/evidence/package/derived/attribution_results.jsonl", "size_bytes": 82860, "sha256": "sha256:e27646b36d43576ff8cdc8fcab93625e5a715f7dbbf456ab11dd935abb8e3e78"}
+    },
+    {
+      "checkpoint_id": "C3",
+      "application_log": {"path": "source/c3/raw_llama_server.log", "original_relative_path": "log-linked-stages/c3/run-log-linked-smoke-20260918T034315Z-34636/evidence/application/raw_llama_server.log", "size_bytes": 152356, "sha256": "sha256:8fadc5bcbc320341f5976eaf02eecb367c8ff4d7ad1fb79d7e74377996a82cf4"},
+      "normalized_application_events": {"path": "source/c3/normalized_application_events.jsonl", "original_relative_path": "log-linked-stages/c3/run-log-linked-smoke-20260918T034315Z-34636/evidence/package/derived/normalized_application_events.jsonl", "size_bytes": 79347, "sha256": "sha256:25d2eeca302d6ba3abcfd9619688b97b44da4c6ca7f1006af0d61d4ced4b1381"},
+      "attribution_results": {"path": "source/c3/attribution_results.jsonl", "original_relative_path": "log-linked-stages/c3/run-log-linked-smoke-20260918T034315Z-34636/evidence/package/derived/attribution_results.jsonl", "size_bytes": 89089, "sha256": "sha256:610dd622f120f355927d5210635d92f55122fb496de482397c93768271c07a7f"}
+    },
+    {
+      "checkpoint_id": "C4",
+      "application_log": {"path": "source/c4/raw_llama_server.log", "original_relative_path": "log-linked-stages/c4/run-log-linked-smoke-20260918T040747Z-34636/evidence/application/raw_llama_server.log", "size_bytes": 230034, "sha256": "sha256:ed9315dee8871e8c3a3e444055277d4678b19f2e9cef2cdf8acbd2c9fa8e6dbc"},
+      "normalized_application_events": {"path": "source/c4/normalized_application_events.jsonl", "original_relative_path": "log-linked-stages/c4/run-log-linked-smoke-20260918T040747Z-34636/evidence/package/derived/normalized_application_events.jsonl", "size_bytes": 79439, "sha256": "sha256:c1054bdc7fffa371ea31ab904a3a5d25aec3876877ef197c51f79e5fcb56c77b"},
+      "attribution_results": {"path": "source/c4/attribution_results.jsonl", "original_relative_path": "log-linked-stages/c4/run-log-linked-smoke-20260918T040747Z-34636/evidence/package/derived/attribution_results.jsonl", "size_bytes": 90722, "sha256": "sha256:95ec727078f5ab71a59b27180a90b75445b3c636d8d016acf2ba740acd9b75fe"}
+    },
+    {
+      "checkpoint_id": "C5",
+      "application_log": {"path": "source/c5/raw_llama_server.log", "original_relative_path": "log-linked-stages/c5/run-log-linked-smoke-20260918T043452Z-34636/evidence/application/raw_llama_server.log", "size_bytes": 321560, "sha256": "sha256:284d490482e7887383a34cd6e88094bee190f52c1b292e5730366d8db1947c66"},
+      "normalized_application_events": {"path": "source/c5/normalized_application_events.jsonl", "original_relative_path": "log-linked-stages/c5/run-log-linked-smoke-20260918T043452Z-34636/evidence/package/derived/normalized_application_events.jsonl", "size_bytes": 79467, "sha256": "sha256:6eec401aaa4dee6218ce3f622cc6523353f21ff66cdc333c94a5f6df4b3538be"},
+      "attribution_results": {"path": "source/c5/attribution_results.jsonl", "original_relative_path": "log-linked-stages/c5/run-log-linked-smoke-20260918T043452Z-34636/evidence/package/derived/attribution_results.jsonl", "size_bytes": 90722, "sha256": "sha256:b2a442dab474f4089a0d0fe2fc23a8a10a5bb3f7a4b3ca03453746cc2dba04c4"}
+    },
+    {
+      "checkpoint_id": "C6",
+      "application_log": {"path": "source/c6/raw_llama_server.log", "original_relative_path": "log-linked-stages/c6/run-log-linked-smoke-20260918T050133Z-34636/evidence/application/raw_llama_server.log", "size_bytes": 415121, "sha256": "sha256:38efb7991f7cd55c6a140c990288acbcc8d46bc1b78bd054889fb211f062f610"},
+      "normalized_application_events": {"path": "source/c6/normalized_application_events.jsonl", "original_relative_path": "log-linked-stages/c6/run-log-linked-smoke-20260918T050133Z-34636/evidence/package/derived/normalized_application_events.jsonl", "size_bytes": 79628, "sha256": "sha256:0c9d05d63bedc6a566ad722ba7f7ed12657f807e9dd6db83bd591733355451fd"},
+      "attribution_results": {"path": "source/c6/attribution_results.jsonl", "original_relative_path": "log-linked-stages/c6/run-log-linked-smoke-20260918T050133Z-34636/evidence/package/derived/attribution_results.jsonl", "size_bytes": 90678, "sha256": "sha256:23c32c616a3fec2f96f1e5ca03e0c0655977a1f59d865dc20e07a95381324782"}
+    }
+  ]
+}

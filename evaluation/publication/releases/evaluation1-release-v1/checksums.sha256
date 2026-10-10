@@ -10,4 +10,4 @@ c35032aa65ac367e3242c1d9a3d2690bac6d6b39c3471ea0e2e5029ae8111af1  models/llama-3
 d2c6f7f2b1b0bfbbeebba8d8242a91f1aa59b9f037f8fbc9868718239870195b  models/qwen2.5-7b-instruct-q4-k-m/log-linked.tar
 7820484a828bbea5c19dec6e935457482cbde28abdcadbd1d4ed9d19cc21a2e1  models/qwen2.5-7b-instruct-q4-k-m/proxy.tar
 7751fee3665646d992305903dabe402e411f0b2ddd7674beafa7f9b52fe457e7  release-manifest.json
-314fdcce2249523ec713a428ca49262bb7219629f23a670bcb231208926f378a  shared-data.tar.gz
+7ae3d596e8983104d32d1a13aa721b2a83a58dd294bcb2e9d6450eabd48eaccf  shared-data.tar.gz

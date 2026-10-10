@@ -8,7 +8,6 @@ from .contracts import (
     RehostSubjectKind,
     RehostValidationError,
 )
-from .preparation import RehostPreparationError, prepare_rehost_cases
 from .wrapper import (
     IO_MAGIC,
     DerivedRuntimeState,
@@ -25,8 +24,6 @@ __all__ = [
     "RehostCase",
     "RehostRuntimeProfile",
     "RehostSubjectKind",
-    "RehostPreparationError",
     "RehostValidationError",
     "materialize_derived_wrapper",
-    "prepare_rehost_cases",
 ]

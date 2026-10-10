@@ -36,12 +36,6 @@ _USER_HMAC = re.compile(r"[A-Za-z0-9_-]{43}\Z")
 _SESSION_REF = re.compile(r"sr_[0-9a-f]{64}\Z")
 _MAX_FAILURE_REASON = 256
 _MAX_ANALYSIS_JSON_BYTES = 16 * 1024 * 1024
-_LEGACY_ANALYSIS_INVENTORIES = (
-    frozenset({"analysis_manifest.json", "messages.json", "result.json"}),
-    frozenset({"analysis_manifest.json", "question.txt", "result.json"}),
-    frozenset({"INCOMPLETE.json", "question.txt"}),
-    frozenset({"INCOMPLETE.json", "evidence"}),
-)
 
 
 class RehostAnalysisSession:
@@ -153,8 +147,6 @@ class RehostAnalysisSession:
             if _ANALYSIS_ID.fullmatch(directory.name) is None:
                 raise RehostAnalysisSessionError("analysis directory name is invalid")
             names = _inventory(directory)
-            if frozenset(names) in _LEGACY_ANALYSIS_INVENTORIES:
-                continue
             if "analysis.json" in names:
                 if names != {"analysis.json", "evidence"}:
                     raise RehostAnalysisSessionError("final analysis inventory is invalid")

@@ -54,10 +54,13 @@ separate label-by-label field comparison produces the same correct-field count.
 
 ## Preservation and measurement scope
 
-Public JSON contains only value-free counts, rates, and input digests. Original bundles,
-requests, responses, logs, and queries are retained outside Git. After exhaustive host
-archive verification and user approval, only this VM run directory was removed; corpus,
-model, and installed LARIS remained. Free VM space was 49,964,773,376 bytes.
+The complete bundles, requests, responses, and query transcripts remain outside Git.
+For auditability, the exact application log, normalized events, and attribution results
+used at each C1–C6 checkpoint are published under `source/`. Their original
+archive-relative paths, byte sizes, and SHA-256 digests are bound in
+[`source-provenance.json`](source-provenance.json). After exhaustive host archive
+verification and user approval, only this VM run directory was removed; corpus, model,
+and installed LARIS remained. Free VM space was 49,964,773,376 bytes.
 
 The 52,936,364,278-byte source archive contains 15,905 exhaustively verified files.
 Declared payload sizes/digests for all 60 bundles, bundle-index digests, and rehost

@@ -48,7 +48,6 @@ roles:
   - tools/vm/export_rehost_profile_inputs.py
   - tools/vm/export_rehost_profile_inputs.sh
   - tools/vm/qualify_runtime_state_candidate.py
-  - tools/vm/run_cumulative_rehosting.sh
   - tools/vm/run_log_linked_llama_server.sh
   - tools/vm/run_log_linked_smoke.py
   - tools/windows/install_rehost_profile.ps1
@@ -57,7 +56,9 @@ roles:
   - tools/windows/resolve_rehost_identity_requirements.py
   - tools/windows/sync_rehost_identity.ps1
   - tools/windows/validate_rehost_profile.py
+  - tools/windows/setup_public_rehost.ps1
   - tools/wsl/install_rehost_runtime.sh
+  - tools/wsl/setup_public_rehost_runtime.sh
   exclude:
   - schemas/evaluation1_*.json
 - name: evaluation1-reproduction
@@ -68,9 +69,12 @@ roles:
   - evaluation/scripts/__init__.py
   - evaluation/scripts/assemble_paper_final_source.py
   - evaluation/scripts/build_public_source_inventory.py
+  - evaluation/scripts/build_public_rehost_profile.py
+  - evaluation/scripts/create_public_rehost_profile.py
   - evaluation/scripts/prepare_public_evaluation_release.py
   - evaluation/scripts/stage_public_evaluation_release.py
   - evaluation/scripts/verify_public_evaluation_release.py
+  - evaluation/scripts/verify_published_results.py
 - name: public-evaluation
   include:
   - evaluation/README.md
@@ -78,14 +82,18 @@ roles:
   - evaluation/experiment_setup/model_licenses.yaml
   - evaluation/publication/**
   - evaluation/results/attribution-accuracy-and-cross-user-isolation/**
+  - evaluation/results/log-linked-correlation/**
   - evaluation/results/runtime-overhead/**
   - evaluation/run_records/evaluation1-public-release.json
+  - evaluation/run_records/evaluation1-public-rehost-smoke.json
   exclude:
   - evaluation/publication/external/**
   - evaluation/publication/generated/**
 - name: public-docs
   include:
   - docs/QUICKSTART.md
+  - docs/OPERATOR_GUIDE.md
+  - docs/REHOSTING_SETUP.md
   - docs/assets/LARIS.png
   - docs/reproducibility/evaluation1-release.md
 - name: release-tests
@@ -94,9 +102,10 @@ roles:
   - tests/unit/rehosting/test_command.py
   - tests/unit/rehosting/test_host_profile.py
   - tests/unit/rehosting/test_payload_wrapper.py
-  - tests/unit/rehosting/test_preparation.py
+  - tests/unit/rehosting/test_catalog.py
   - tests/unit/rehosting/test_rehosting_contracts.py
   - tests/unit/rehosting/test_runner.py
+  - tests/unit/rehosting/test_runtime_profile.py
   - tests/unit/rehosting/test_terminal.py
   - tests/fixtures/__init__.py
   - tests/fixtures/simple_kv_payload_fixtures.py
@@ -104,6 +113,8 @@ roles:
   - tests/contract/test_package_metadata.py
   - tests/contract/test_paper_release_boundary.py
   - tests/contract/test_public_repository_layout.py
+  - tests/contract/test_public_rehost_setup.py
+  - tests/unit/reproduction/test_verify_published_results.py
 deny:
   prefixes:
   - .github/

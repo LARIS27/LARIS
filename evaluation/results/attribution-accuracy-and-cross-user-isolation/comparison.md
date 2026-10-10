@@ -5,6 +5,9 @@ and C1–C6 checkpoints. Each model's Native baseline contains 180
 `HISTORICAL_MATCHED_CHECKPOINT` trials. Log-linked and Proxy each contain 180 separate
 rehosting calls that ask the same questions against the corresponding checkpoint
 bundles. Responses from different models are not compared for literal equality.
+The model-specific Log-linked reports publish the exact C1–C6 application logs,
+normalized events, attribution results, and archive-bound provenance used to recompute
+the 360 final attribution decisions.
 
 ## Llama 3.2 3B
 
@@ -65,6 +68,6 @@ These are K4 single-cell results and do not include K8 or the separate overhead 
 
 Follow the [Evaluation1 release and replay guide](../../../docs/reproducibility/evaluation1-release.md)
 to select the same C1–C6/U01–U10 tuples from the external KV release and submit the
-paper question or an arbitrary reviewer question. The public tools do not alter these
+paper question or a custom question. The public tools do not alter these
 aggregate values: they reverify the selected tuple's digest and attribution identifier
 before passing it to the current rehosting engine.

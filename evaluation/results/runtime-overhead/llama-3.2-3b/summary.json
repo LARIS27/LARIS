@@ -149,48 +149,79 @@
   ],
   "paper_table": {
     "columns": [
-      "Mode",
-      "KV capture work per run",
-      "Normalized KV-enabled overhead"
+      "Condition",
+      "Capture policy",
+      "Runtime mean seconds",
+      "Runtime 95% CI seconds",
+      "Matched reference",
+      "Paired overhead mean percent",
+      "Paired overhead 95% CI percent"
     ],
     "rows": [
       {
-        "kv_capture_work_ci95_seconds": [
-          0,
-          0
-        ],
-        "mean_kv_capture_work_seconds": 0,
-        "mean_normalized_kv_overhead_percent": 0,
-        "mode": "Native",
-        "normalized_kv_overhead_ci95_percent": [
-          0,
-          0
+        "capture_policy": "NONE",
+        "condition": "Native",
+        "matched_reference": null,
+        "mean_paired_overhead_percent": null,
+        "mean_runtime_seconds": 2284.32,
+        "paired_overhead_ci95_percent": null,
+        "runtime_ci95_seconds": [
+          2032.76,
+          2535.87
         ]
       },
       {
-        "kv_capture_work_ci95_seconds": [
-          298.94162716595,
-          365.43913486405
-        ],
-        "mean_kv_capture_work_seconds": 332.190381015,
-        "mean_normalized_kv_overhead_percent": 18.414661589633,
-        "mode": "Proxy",
-        "normalized_kv_overhead_ci95_percent": [
+        "capture_policy": "CONTROL_NO_KV",
+        "condition": "Proxy control",
+        "matched_reference": "Native",
+        "mean_paired_overhead_percent": null,
+        "mean_runtime_seconds": 2401.69,
+        "paired_overhead_ci95_percent": null,
+        "runtime_ci95_seconds": [
+          2175.77,
+          2627.61
+        ]
+      },
+      {
+        "capture_policy": "FULL",
+        "condition": "Proxy",
+        "matched_reference": "Proxy control",
+        "mean_paired_overhead_percent": 18.414661589633,
+        "mean_runtime_seconds": 2834.74,
+        "paired_overhead_ci95_percent": [
           7.655263188154,
           29.174059991111
+        ],
+        "runtime_ci95_seconds": [
+          2649.91,
+          3019.58
         ]
       },
       {
-        "kv_capture_work_ci95_seconds": [
-          128.692464533801,
-          170.716319134599
-        ],
-        "mean_kv_capture_work_seconds": 149.7043918342,
-        "mean_normalized_kv_overhead_percent": 102.769262638129,
-        "mode": "Log-linked",
-        "normalized_kv_overhead_ci95_percent": [
+        "capture_policy": "CONTROL_NO_KV",
+        "condition": "Log-linked control",
+        "matched_reference": "Native",
+        "mean_paired_overhead_percent": null,
+        "mean_runtime_seconds": 2222.24,
+        "paired_overhead_ci95_percent": null,
+        "runtime_ci95_seconds": [
+          2132.07,
+          2312.42
+        ]
+      },
+      {
+        "capture_policy": "FULL",
+        "condition": "Log-linked",
+        "matched_reference": "Log-linked control",
+        "mean_paired_overhead_percent": 102.769262638129,
+        "mean_runtime_seconds": 4504.3,
+        "paired_overhead_ci95_percent": [
           93.043753828068,
           112.494771448191
+        ],
+        "runtime_ci95_seconds": [
+          4275.73,
+          4732.87
         ]
       }
     ]

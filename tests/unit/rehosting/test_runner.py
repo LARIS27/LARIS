@@ -9,7 +9,11 @@ import pytest
 from laris_onpremise.bundle.rehost_metadata import RehostRuntimeMetadata
 from laris_onpremise.rehosting.contracts import RehostCase, RehostRuntimeProfile
 from laris_onpremise.rehosting.contracts import InvestigatorSampler
-from laris_onpremise.rehosting.runner import RehostExecutionError, invoke_helper
+from laris_onpremise.rehosting.runner import (
+    RehostExecutionError,
+    _verified_run_root,
+    invoke_helper,
+)
 
 
 RUN_ID = "run-20260814-204253-KST_qwen_c5-attribution_abcd"
@@ -62,8 +66,8 @@ def _case(test_root: Path, *, v_trans: bool = True) -> RehostCase:
     )
 
 
-def _portable_case(test_root: Path) -> RehostCase:
-    case = _case(test_root)
+def _portable_case(test_root: Path, *, v_trans: bool = True) -> RehostCase:
+    case = _case(test_root, v_trans=v_trans)
     old_session_root = case.payload_path.parent
     portable_session_root = (
         test_root
@@ -82,6 +86,16 @@ def _portable_case(test_root: Path) -> RehostCase:
             "payload_path": portable_session_root / "runtime_state_payload.bin",
         }
     )
+
+
+def test_verified_run_root_rejects_removed_run_root_layout(tmp_path: Path) -> None:
+    case = _case(tmp_path)
+
+    with pytest.raises(
+        RehostExecutionError,
+        match="payload path is not bound to the evidence run",
+    ):
+        _verified_run_root(case)
 
 
 def test_invoke_helper_accepts_the_canonical_portable_bundle_path(
@@ -195,7 +209,7 @@ def test_invoke_helper_materializes_wrapper_only_in_analysis_directory(
     v_trans: bool,
     wire_value: str,
 ) -> None:
-    case = _case(tmp_path, v_trans=v_trans)
+    case = _portable_case(tmp_path, v_trans=v_trans)
     bundle_root = case.payload_path.parent
     helper = tmp_path / "helper"
     model = tmp_path / "model.gguf"
@@ -259,7 +273,7 @@ def test_success_receipt_rejects_legacy_loaded_token_metadata(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    case = _case(tmp_path)
+    case = _portable_case(tmp_path)
     helper = tmp_path / "helper"
     model = tmp_path / "model.gguf"
     question = tmp_path / "question.txt"
@@ -298,7 +312,7 @@ def test_rejects_analysis_root_inside_evidence_run(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    case = _case(tmp_path)
+    case = _portable_case(tmp_path)
     helper = tmp_path / "helper"
     model = tmp_path / "model.gguf"
     question = tmp_path / "question.txt"
@@ -337,7 +351,7 @@ def test_success_requires_a_generated_response(
     response: str,
     generated: int,
 ) -> None:
-    case = _case(tmp_path)
+    case = _portable_case(tmp_path)
     helper = tmp_path / "helper"
     model = tmp_path / "model.gguf"
     question = tmp_path / "question.txt"
@@ -374,7 +388,7 @@ def test_helper_environment_removes_untrusted_loader_overrides(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    case = _case(tmp_path)
+    case = _portable_case(tmp_path)
     helper = tmp_path / "helper"
     model = tmp_path / "model.gguf"
     question = tmp_path / "question.txt"
@@ -422,7 +436,7 @@ def test_rejects_mapped_libllama_identity_mismatch(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    case = _case(tmp_path)
+    case = _portable_case(tmp_path)
     helper = tmp_path / "helper"
     model = tmp_path / "model.gguf"
     question = tmp_path / "question.txt"
@@ -472,7 +486,7 @@ def test_rejects_unqualified_helper_or_libllama(
     libllama_bytes: bytes,
     message: str,
 ) -> None:
-    case = _case(tmp_path)
+    case = _portable_case(tmp_path)
     helper = tmp_path / "helper"
     model = tmp_path / "model.gguf"
     question = tmp_path / "question.txt"

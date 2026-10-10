@@ -7,25 +7,24 @@ from pathlib import Path
 
 from laris_onpremise.kv_state.observation.runtime_state_profile import (
     RuntimeStateProfileError,
-    load_runtime_state_observer_profile,
 )
 
 from .contracts import InvestigatorSampler, RehostRuntimeProfile
 from .catalog import PortableBundleCatalog, PortableBundleError
-from .preparation import RehostPreparationError
 from .runner import RehostExecutionError, digest_file, invoke_helper
+from .runtime_profile import load_rehost_runtime_profile
+
+
+class RehostCommandError(RuntimeError):
+    """Raised when the portable worker request is incomplete or inconsistent."""
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Rehost one verified cumulative LARIS runtime-state payload."
     )
-    source = parser.add_mutually_exclusive_group(required=True)
-    source.add_argument("--run-root", type=Path)
-    source.add_argument("--bundle-root", type=Path)
+    parser.add_argument("--bundle-root", type=Path, required=True)
     parser.add_argument("--bundle-manifest-digest")
-    parser.add_argument("--user-hmac")
-    parser.add_argument("--session-ref")
     parser.add_argument("--bundle-id")
     parser.add_argument("--destination-seq-id", type=int, default=0)
     parser.add_argument("--helper", type=Path, required=True)
@@ -34,7 +33,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--model", type=Path, required=True)
     parser.add_argument("--model-profile-id", required=True)
     parser.add_argument("--runtime-profile", type=Path, required=True)
-    parser.add_argument("--index-digest")
     parser.add_argument("--messages-file", type=Path, required=True)
     parser.add_argument("--analysis-root", type=Path, required=True)
     parser.add_argument("--timeout-seconds", type=int, default=120)
@@ -48,20 +46,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _load_runtime_profile(path: Path) -> RehostRuntimeProfile:
-    observer_profile = load_runtime_state_observer_profile(path)
-    return RehostRuntimeProfile(
-        profile_digest=observer_profile.profile_digest,
-        runtime_binary_digest=observer_profile.runtime_binary_sha256,
-        mapped_libllama_digest=observer_profile.mapped_libllama_sha256,
-        mapped_libllama_elf_build_id=observer_profile.mapped_libllama_elf_build_id,
-        n_seq_max=observer_profile.n_seq_max,
-        n_stream=observer_profile.n_stream,
-        n_layer=observer_profile.n_layer,
-        v_trans=observer_profile.v_trans,
-        key_ggml_type_id=observer_profile.key_ggml_type_id,
-        value_ggml_type_id=observer_profile.value_ggml_type_id,
-        max_n_layer=observer_profile.max_n_layer,
-    )
+    return load_rehost_runtime_profile(path)
 
 
 def _portable_case(
@@ -71,26 +56,26 @@ def _portable_case(
     model_digest: str,
 ) -> tuple[object, object]:
     if arguments.bundle_manifest_digest is None:
-        raise RehostPreparationError("bundle manifest digest is required")
+        raise RehostCommandError("bundle manifest digest is required")
     if arguments.bundle_id is None:
-        raise RehostPreparationError("bundle ID is required")
+        raise RehostCommandError("bundle ID is required")
     catalog = PortableBundleCatalog.open(
         arguments.bundle_root,
         expected_manifest_digest=arguments.bundle_manifest_digest,
     )
     if catalog.runtime_metadata is None or catalog.prompt_contract != "gguf_default":
-        raise RehostPreparationError(
+        raise RehostCommandError(
             "bundle does not contain the GGUF-default rehost contract"
         )
     matches = [item for item in catalog.entries if item.bundle_id == arguments.bundle_id]
     if len(matches) != 1:
-        raise RehostPreparationError("selection must resolve to exactly one bundle")
+        raise RehostCommandError("selection must resolve to exactly one bundle")
     entry = matches[0]
     if (
         entry.model_profile_id != arguments.model_profile_id
         or entry.model_digest != model_digest
     ):
-        raise RehostPreparationError("selected model differs from the bundle")
+        raise RehostCommandError("selected model differs from the bundle")
     case = entry.to_rehost_case(
         run_id=catalog.source_run_id,
         destination_seq_id=arguments.destination_seq_id,
@@ -104,19 +89,14 @@ def main(argv: list[str] | None = None) -> int:
     try:
         runtime_profile = _load_runtime_profile(arguments.runtime_profile)
         model_digest = digest_file(arguments.model)
-        if arguments.bundle_root is not None:
-            case, runtime_metadata = _portable_case(
-                arguments,
-                runtime_profile=runtime_profile,
-                model_digest=model_digest,
-            )
-            cases = (case,)
-        else:
-            raise RehostPreparationError(
-                "legacy run-root rehosting has no GGUF-default runtime metadata"
-            )
+        case, runtime_metadata = _portable_case(
+            arguments,
+            runtime_profile=runtime_profile,
+            model_digest=model_digest,
+        )
+        cases = (case,)
         if len(cases) != 1:
-            raise RehostPreparationError("selection must resolve to exactly one bundle")
+            raise RehostCommandError("selection must resolve to exactly one bundle")
         receipt = invoke_helper(
             arguments.helper,
             arguments.model,
@@ -140,7 +120,7 @@ def main(argv: list[str] | None = None) -> int:
     except (
         OSError,
         PortableBundleError,
-        RehostPreparationError,
+        RehostCommandError,
         RehostExecutionError,
         RuntimeStateProfileError,
         ValueError,

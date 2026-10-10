@@ -13,6 +13,7 @@ from laris_onpremise.reproduction.evaluation1.archive import (
 )
 from laris_onpremise.reproduction.evaluation1.locations import (
     PENDING_PUBLICATION,
+    REQUIRED_EXTERNAL_PATHS,
     ArtifactLocationError,
     load_artifact_locations,
     verify_external_files,
@@ -61,6 +62,31 @@ def _ensure_regular_path(root: Path, relative: str) -> Path:
         if path.is_symlink():
             raise ArtifactLocationError(f"path contains a symlink: {relative}")
     return path
+
+
+def locate_download_release_root(download_root: Path) -> Path:
+    download_root = download_root.resolve()
+    if not download_root.is_dir() or download_root.is_symlink():
+        raise ArtifactLocationError("download root must be a regular directory")
+    candidates = (
+        download_root,
+        download_root / "evaluation1-release-v1",
+        download_root / "LARIS_Evaluation" / "evaluation1-release-v1",
+    )
+    matches: list[Path] = []
+    for candidate in candidates:
+        if not candidate.is_dir() or candidate.is_symlink():
+            continue
+        if all(
+            _ensure_regular_path(candidate, relative).is_file()
+            for relative in REQUIRED_EXTERNAL_PATHS
+        ):
+            matches.append(candidate.resolve())
+    if len(matches) != 1:
+        raise ArtifactLocationError(
+            "download root must contain exactly one complete evaluation1-release-v1 tree"
+        )
+    return matches[0]
 
 
 def initialize_release(metadata_root: Path, external_root: Path) -> tuple[Path, ...]:
@@ -145,6 +171,8 @@ def verify_staged_release(
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Stage and verify Evaluation1 external files.")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    locate = subparsers.add_parser("locate")
+    locate.add_argument("--download-root", type=Path, required=True)
     for command in ("initialize", "verify"):
         child = subparsers.add_parser(command)
         child.add_argument("--metadata-root", type=Path, required=True)
@@ -156,9 +184,14 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    if args.command == "initialize":
-        copied = initialize_release(args.metadata_root, args.external_root)
+    if args.command == "locate":
         output: Mapping[str, object] = {
+            "status": "LOCATED",
+            "external_root": str(locate_download_release_root(args.download_root)),
+        }
+    elif args.command == "initialize":
+        copied = initialize_release(args.metadata_root, args.external_root)
+        output = {
             "status": "INITIALIZED",
             "metadata_file_count": len(copied),
         }

@@ -146,9 +146,6 @@ def _verified_run_root(case: RehostCase) -> Path:
     expected_session_prefix = hashlib.sha256(
         case.session_ref.encode("utf-8")
     ).hexdigest()
-    legacy_user_root = session_root.parent
-    legacy_rehost_root = legacy_user_root.parent
-    legacy_run_root = legacy_rehost_root.parent
     portable_sessions_root = session_root.parent
     portable_subject_root = portable_sessions_root.parent
     portable_subjects_root = portable_subject_root.parent
@@ -158,11 +155,6 @@ def _verified_run_root(case: RehostCase) -> Path:
         session_root.name.startswith("s_")
         and expected_session_prefix.startswith(session_root.name[2:])
         and 16 <= len(session_root.name[2:]) <= 64
-    )
-    legacy_matches = (
-        legacy_rehost_root.name == "rehost"
-        and legacy_user_root.name == f"uh_{case.user_hmac}"
-        and legacy_run_root.name == case.run_id
     )
     portable_user_matches = (
         case.subject_kind is RehostSubjectKind.USER_HMAC
@@ -181,12 +173,11 @@ def _verified_run_root(case: RehostCase) -> Path:
         and portable_run_root.name == case.run_id
     )
     if not identity_matches or not (
-        legacy_matches or portable_user_matches or portable_endpoint_matches
+        portable_user_matches or portable_endpoint_matches
     ):
         raise RehostExecutionError("payload path is not bound to the evidence run")
-    run_root = legacy_run_root if legacy_matches else portable_run_root
     try:
-        return run_root.resolve(strict=True)
+        return portable_run_root.resolve(strict=True)
     except OSError as error:
         raise RehostExecutionError("evidence run root is unavailable") from error
 

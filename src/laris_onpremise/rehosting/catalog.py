@@ -29,10 +29,9 @@ _USER_HMAC = re.compile(r"[A-Za-z0-9_-]{43}\Z")
 _ENDPOINT_REF = _USER_HMAC
 _SESSION_REF = re.compile(r"sr_[0-9a-f]{64}\Z")
 _SAFE_TEXT = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,191}\Z")
-_PACKAGE_FIELDS_V1 = frozenset(
+_PACKAGE_FIELDS_V1_1 = frozenset(
     {"schema_version", "package_type", "run_id", "source", "bundle_index"}
-)
-_PACKAGE_FIELDS_V1_1 = _PACKAGE_FIELDS_V1 | {"rehost_metadata"}
+) | {"rehost_metadata"}
 _PACKAGE_FIELDS_V2 = _PACKAGE_FIELDS_V1_1 | {"subject_kind"}
 _INDEX_FIELDS = frozenset({"schema_version", "run_id", "entries"})
 _ENDPOINT_INDEX_FIELDS = _INDEX_FIELDS | {"subject_kind"}
@@ -234,8 +233,8 @@ class PortableBundleCatalog:
     manifest_digest: str
     index_digest: str
     entries: tuple[PortableBundleEntry, ...]
-    runtime_metadata: RehostRuntimeMetadata | None = None
-    prompt_contract: str = "legacy_raw_completion"
+    runtime_metadata: RehostRuntimeMetadata
+    prompt_contract: str = "gguf_default"
     subject_kind: RehostSubjectKind = RehostSubjectKind.USER_HMAC
 
     @classmethod
@@ -248,8 +247,12 @@ class PortableBundleCatalog:
         root_inventory = _inventory(root)
         if "bundle_manifest.json" not in root_inventory:
             raise PortableBundleError("bundle completion manifest is unavailable")
-        legacy_inventory = {"bundle_manifest.json", "bundle_index.json", "users"}
-        current_inventory = legacy_inventory | {"rehost_metadata.json"}
+        current_inventory = {
+            "bundle_manifest.json",
+            "bundle_index.json",
+            "rehost_metadata.json",
+            "users",
+        }
         endpoint_inventory = {
             "bundle_manifest.json",
             "bundle_index.json",
@@ -257,7 +260,6 @@ class PortableBundleCatalog:
             "endpoints",
         }
         if frozenset(root_inventory) not in {
-            frozenset(legacy_inventory),
             frozenset(current_inventory),
             frozenset(endpoint_inventory),
         }:
@@ -277,44 +279,37 @@ class PortableBundleCatalog:
             metadata_binding,
             subject_kind,
         ) = _validate_package(package)
-        if metadata_binding is None:
-            if root_inventory != legacy_inventory:
-                raise PortableBundleError("legacy bundle root inventory is invalid")
-            runtime_metadata = None
-            prompt_contract = "legacy_raw_completion"
-        else:
-            expected_inventory = (
-                endpoint_inventory
-                if subject_kind is RehostSubjectKind.ENDPOINT_REF
-                else current_inventory
+        expected_inventory = (
+            endpoint_inventory
+            if subject_kind is RehostSubjectKind.ENDPOINT_REF
+            else current_inventory
+        )
+        if root_inventory != expected_inventory:
+            raise PortableBundleError("current bundle root inventory is invalid")
+        metadata_path = root / "rehost_metadata.json"
+        raw_metadata, observed_metadata_digest = _read_regular_file(
+            metadata_path,
+            limit=_MAX_METADATA_BYTES,
+        )
+        if (
+            len(raw_metadata) != metadata_binding[1]
+            or not hmac.compare_digest(
+                observed_metadata_digest, metadata_binding[0]
             )
-            if root_inventory != expected_inventory:
-                raise PortableBundleError("current bundle root inventory is invalid")
-            metadata_path = root / "rehost_metadata.json"
-            raw_metadata, observed_metadata_digest = _read_regular_file(
-                metadata_path,
-                limit=_MAX_METADATA_BYTES,
+        ):
+            raise PortableBundleError("rehost metadata digest or size differs")
+        metadata_document, canonical_digest = _canonical_mapping(
+            metadata_path,
+            "rehost metadata",
+        )
+        if not hmac.compare_digest(canonical_digest, observed_metadata_digest):
+            raise PortableBundleError("rehost metadata changed while validating")
+        try:
+            runtime_metadata = RehostRuntimeMetadata.from_mapping(
+                metadata_document
             )
-            if (
-                len(raw_metadata) != metadata_binding[1]
-                or not hmac.compare_digest(
-                    observed_metadata_digest, metadata_binding[0]
-                )
-            ):
-                raise PortableBundleError("rehost metadata digest or size differs")
-            metadata_document, canonical_digest = _canonical_mapping(
-                metadata_path,
-                "rehost metadata",
-            )
-            if not hmac.compare_digest(canonical_digest, observed_metadata_digest):
-                raise PortableBundleError("rehost metadata changed while validating")
-            try:
-                runtime_metadata = RehostRuntimeMetadata.from_mapping(
-                    metadata_document
-                )
-            except RehostRuntimeMetadataError as error:
-                raise PortableBundleError("rehost metadata is invalid") from error
-            prompt_contract = "gguf_default"
+        except RehostRuntimeMetadataError as error:
+            raise PortableBundleError("rehost metadata is invalid") from error
 
         index, index_digest = _canonical_mapping(
             root / "bundle_index.json",
@@ -323,7 +318,7 @@ class PortableBundleCatalog:
         if not hmac.compare_digest(index_digest, expected_index_digest):
             raise PortableBundleError("bundle index digest differs")
         entries = _validate_index(root, run_id, index, subject_kind=subject_kind)
-        if runtime_metadata is not None and any(
+        if any(
             entry.runtime_profile_digest
             != runtime_metadata.source_runtime_profile_digest
             for entry in entries
@@ -338,19 +333,19 @@ class PortableBundleCatalog:
             index_digest,
             entries,
             runtime_metadata,
-            prompt_contract,
+            "gguf_default",
             subject_kind,
         )
 
 
 def _validate_package(
     package: Mapping[str, object],
-) -> tuple[str, str, tuple[str, int] | None, RehostSubjectKind]:
+) -> tuple[str, str, tuple[str, int], RehostSubjectKind]:
     source = package.get("source")
     binding = package.get("bundle_index")
     run_id = package.get("run_id")
     if (
-        package.get("schema_version") not in {"1.0", "1.1", "2.0"}
+        package.get("schema_version") not in {"1.1", "2.0"}
         or package.get("package_type") != "laris_rehost_bundle"
         or not isinstance(run_id, str)
         or _RUN_ID.fullmatch(run_id) is None
@@ -361,13 +356,7 @@ def _validate_package(
     ):
         raise PortableBundleError("bundle completion manifest is invalid")
     version = package["schema_version"]
-    expected_fields = (
-        _PACKAGE_FIELDS_V1
-        if version == "1.0"
-        else _PACKAGE_FIELDS_V1_1
-        if version == "1.1"
-        else _PACKAGE_FIELDS_V2
-    )
+    expected_fields = _PACKAGE_FIELDS_V1_1 if version == "1.1" else _PACKAGE_FIELDS_V2
     if set(package) != expected_fields:
         raise PortableBundleError("bundle completion manifest is invalid")
     subject_kind = (
@@ -389,19 +378,17 @@ def _validate_package(
         raise PortableBundleError("bundle subject kind is invalid")
     for name, value in source.items():
         _digest(str(name), value)
-    metadata_binding: tuple[str, int] | None = None
-    if version in {"1.1", "2.0"}:
-        raw_metadata = package.get("rehost_metadata")
-        if (
-            not isinstance(raw_metadata, dict)
-            or set(raw_metadata) != {"path", "digest", "size_bytes"}
-            or raw_metadata.get("path") != "rehost_metadata.json"
-        ):
-            raise PortableBundleError("rehost metadata binding is invalid")
-        metadata_binding = (
-            _digest("rehost metadata digest", raw_metadata["digest"]),
-            _positive_int("rehost metadata size", raw_metadata["size_bytes"]),
-        )
+    raw_metadata = package.get("rehost_metadata")
+    if (
+        not isinstance(raw_metadata, dict)
+        or set(raw_metadata) != {"path", "digest", "size_bytes"}
+        or raw_metadata.get("path") != "rehost_metadata.json"
+    ):
+        raise PortableBundleError("rehost metadata binding is invalid")
+    metadata_binding = (
+        _digest("rehost metadata digest", raw_metadata["digest"]),
+        _positive_int("rehost metadata size", raw_metadata["size_bytes"]),
+    )
     return (
         run_id,
         _digest("bundle index digest", binding["digest"]),

@@ -15,7 +15,6 @@ from laris_onpremise.attribution.proxy.command import (
     add_arguments as add_proxy_arguments,
     run as run_proxy_command,
 )
-from laris_onpremise.rehosting.command import main as rehost_main
 from laris_onpremise.rehosting.open_command import open_main as rehost_open_main
 from laris_onpremise.rehosting.profile_command import (
     add_identity_main as profile_add_identity_main,
@@ -38,26 +37,6 @@ def _add_rehost_parser(
         "rehost", help="Rehost verified runtime-state payloads"
     )
     commands = rehost.add_subparsers(dest="rehost_command", required=True)
-
-    cumulative = commands.add_parser(
-        "cumulative", help="Query one cumulative-context payload"
-    )
-    cumulative.add_argument("--run-root", required=True)
-    cumulative.add_argument("--user-hmac")
-    cumulative.add_argument("--session-ref")
-    cumulative.add_argument("--bundle-id")
-    cumulative.add_argument("--destination-seq-id", type=int, default=0)
-    cumulative.add_argument("--helper", required=True)
-    cumulative.add_argument("--helper-digest", required=True)
-    cumulative.add_argument("--libllama", required=True)
-    cumulative.add_argument("--model", required=True)
-    cumulative.add_argument("--model-profile-id", required=True)
-    cumulative.add_argument("--runtime-profile", required=True)
-    cumulative.add_argument("--index-digest", required=True)
-    cumulative.add_argument("--messages-file", required=True)
-    cumulative.add_argument("--analysis-root", required=True)
-    cumulative.add_argument("--timeout-seconds", type=int, default=120)
-    cumulative.add_argument("--predict", type=int, default=64)
 
     opened = commands.add_parser(
         "open", help="Open one portable bundle and query a restored session"
@@ -126,32 +105,6 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _cumulative_arguments(arguments: argparse.Namespace) -> list[str]:
-    values = [
-        "--run-root", arguments.run_root,
-        "--helper", arguments.helper,
-        "--helper-digest", arguments.helper_digest,
-        "--libllama", arguments.libllama,
-        "--model", arguments.model,
-        "--model-profile-id", arguments.model_profile_id,
-        "--runtime-profile", arguments.runtime_profile,
-        "--index-digest", arguments.index_digest,
-        "--messages-file", arguments.messages_file,
-        "--analysis-root", arguments.analysis_root,
-        "--destination-seq-id", str(arguments.destination_seq_id),
-        "--timeout-seconds", str(arguments.timeout_seconds),
-        "--predict", str(arguments.predict),
-    ]
-    for option, value in (
-        ("--user-hmac", arguments.user_hmac),
-        ("--session-ref", arguments.session_ref),
-        ("--bundle-id", arguments.bundle_id),
-    ):
-        if value is not None:
-            values.extend((option, value))
-    return values
-
-
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _parser()
     arguments = parser.parse_args(argv)
@@ -164,8 +117,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             return run_log_linked_command(arguments)
         if arguments.command == "reproduce":
             return run_reproduction_command(arguments)
-        if arguments.command == "rehost" and arguments.rehost_command == "cumulative":
-            return rehost_main(_cumulative_arguments(arguments))
         if arguments.command == "rehost" and arguments.rehost_command == "open":
             return rehost_open_main(arguments)
         if (

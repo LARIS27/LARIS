@@ -12,43 +12,33 @@ tokens and 1,080 generated tokens. Each run started from the same VM snapshot. O
 was balanced across blocks rather than fixed. The machine-readable source is
 [`llama-3.2-3b/summary.json`](llama-3.2-3b/summary.json).
 
-## Paper result
+## End-to-end result
 
-| Mode | KV capture work per run, mean (95% CI) | Normalized KV-enabled overhead, mean (95% CI) |
-|---|---:|---:|
-| Native | 0.000 s (0.000–0.000) | 0.000% (0.000–0.000) |
-| Proxy | 332.190 s (298.942–365.439) | 18.415% (7.655–29.174) |
-| Log-linked | 149.704 s (128.692–170.716) | 102.769% (93.044–112.495) |
+| Condition | Capture policy | Runtime, mean (95% CI) | Matched reference | Paired overhead, mean (95% CI) |
+|---|---|---:|---|---:|
+| Native | None | 2284.32 s (2032.76–2535.87) | — | — |
+| Proxy control | Attribution only; KV copying disabled | 2401.69 s (2175.77–2627.61) | Native | — |
+| Proxy | Full | 2834.74 s (2649.91–3019.58) | Proxy control | 18.415% (7.655–29.174) |
+| Log-linked control | Attribution only; KV copying disabled | 2222.24 s (2132.07–2312.42) | Native | — |
+| Log-linked | Full | 4504.30 s (4275.73–4732.87) | Log-linked control | 102.769% (93.044–112.495) |
 
 All 25 runs completed 180/180 requests and passed host verification. Both capture modes
-reported **lost events: 0**. Each full run captured 14,270,513,152 KV bytes; each mode
-therefore captured 71,352,565,760 bytes across its five full runs.
+reported **lost events: 0**. Each full run captured the same 14,270,513,152 KV bytes.
 
-## What the two columns mean
+## Paired metric
 
-`KV capture work per run` is the time accumulated by the instrumented capture work in
-the full run. It is a direct-work counter and **not the end-to-end overhead by itself**.
-It must not be substituted for the change in application runtime.
-
-For mode `m` and balanced block `b`, let:
-
-- `Tnative(b)` be the Native duration;
-- `Tfull(m,b)` be the duration with that attribution path and KV capture enabled;
-- `Tcontrol(m,b)` be the duration of the same attribution path with KV copying disabled;
-- `F(m,b) = Tfull(m,b) / Tnative(b)`; and
-- `C(m,b) = Tcontrol(m,b) / Tnative(b)`.
-
-The reported paired overhead is:
+For mode `m` and balanced block `b`, `Tfull(m,b)` is the full condition runtime and
+`Tcontrol(m,b)` is the runtime of the same attribution path with KV copying disabled.
+The block-level overhead is:
 
 ```text
-O(m,b) = 100 × (F(m,b) / C(m,b) − 1)
+O(m,b) = 100 × (Tfull(m,b) / Tcontrol(m,b) − 1)
 ```
 
 The table reports the mean of the five block values and its 95% confidence interval.
-The same-block Native term makes the normalization and pairing explicit; algebraically,
-the ratio is the full/control runtime change within the block. It therefore includes
-capture-induced stalls, scheduling effects, encoding and persistence, not only the
-direct-work counter.
+Native and both attribution-only controls are shown so that the absolute runtime and
+the matched comparison used by each full mode remain explicit. The overhead value is
+the full/control runtime change within the same balanced block.
 
 The result supports a moderate Proxy overhead in this environment. It does not support
 a low-overhead claim for the current Log-linked implementation: its paired mean is

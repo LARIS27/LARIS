@@ -32,6 +32,11 @@ observed. Two responses contained five fields from another record for the same u
 and nine unregistered code forms were observed. Zero observed mixing does not prove the
 absence of every unobserved disclosure.
 
+The exact C1–C6 application logs, normalized events, and attribution results supporting
+that aggregate are published under `source/`. Their original archive-relative
+paths, byte sizes, and SHA-256 digests are bound in
+[`source-provenance.json`](source-provenance.json).
+
 The retained source archive contains 17,194 files; the completed rerun archive contains
 183 files. Each inventory, size, and SHA-256 was exhaustively verified. Source transcript
 and 60-bundle-set digests were recomputed against retained metadata. Only the two verified

@@ -51,9 +51,4 @@ artifacts/*
 /qroota26/
 /tmp05_*/
 /tmr*/
-tools/legacy/dashboard_design_runtime/brainstorm/chrome-*/
-tools/legacy/dashboard_design_*/brainstorm/.last-*
-tools/legacy/dashboard_design_*/brainstorm/*/state/
-tools/legacy/dashboard_design_*/brainstorm/*-verification.png
-tools/legacy/deploy_exp01b/overlay*.tar
 tools/vm/*.tmp.sh

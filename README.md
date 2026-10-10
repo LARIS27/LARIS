@@ -6,7 +6,7 @@
 </h3>
 
 <p align="center">
-  <img alt="Official repository for the DFC EU 2027 submission" src="https://img.shields.io/badge/DFC_EU_2027-OFFICIAL_SUBMISSION_REPOSITORY-f59e0b?style=flat-square" height="22">
+  <img alt="Official repository for the DFC Europe 2027 submission" src="https://img.shields.io/badge/DFC_Europe_2027-OFFICIAL_SUBMISSION_REPOSITORY-f59e0b?style=flat-square" height="22">
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@
 
 ## Overview
 
-**LARIS (Lock-on Acquisition for Runtime Inference State)** is an on-premises forensic
+**LARIS (Lock-on Acquisition of Runtime Inference State)** is an on-premises forensic
 framework for selectively acquiring KV-cache state from shared local LLM services,
 attributing that state to the corresponding user or request context, sealing it as
 verifiable evidence, and rehosting it for subsequent investigative querying. Rather
@@ -64,9 +64,11 @@ from model generation.
 ## Getting started
 
 1. Follow [the quickstart](docs/QUICKSTART.md).
-2. Read [the Evaluation1 replay guide](docs/reproducibility/evaluation1-release.md).
-3. Inspect the published [attribution and recall results](evaluation/results/attribution-accuracy-and-cross-user-isolation/comparison.md).
-4. Inspect the completed [Evaluation2 overhead results](evaluation/results/runtime-overhead/README.md).
+2. Prepare a new replay machine with the [public rehosting setup](docs/REHOSTING_SETUP.md).
+3. Read [the Evaluation1 replay guide](docs/reproducibility/evaluation1-release.md).
+4. Use the [operator guide](docs/OPERATOR_GUIDE.md) for live Proxy and Log-linked operation.
+5. Inspect the published [attribution and recall results](evaluation/results/attribution-accuracy-and-cross-user-isolation/comparison.md).
+6. Inspect the completed [Evaluation2 overhead results](evaluation/results/runtime-overhead/README.md).
 
 Small, independently verifiable Evaluation1 metadata is tracked under
 `evaluation/publication/releases/evaluation1-release-v1`. The seven externally hosted
@@ -76,9 +78,9 @@ their exact paths, sizes, and SHA-256 digests pass offline verification.
 
 ## Installation
 
+From the repository root:
+
 ```text
-git clone https://github.com/LARIS27/papersubmit.git
-cd papersubmit
 python -m pip install -e .
 ```
 

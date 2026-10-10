@@ -12,8 +12,12 @@ ALLOWLIST = ROOT / "evaluation" / "publication" / "source-allowlist.yaml"
 
 
 def _public_paths() -> set[str]:
-    output = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT)
-    tracked = [item.decode("utf-8") for item in output.split(b"\0") if item]
+    output = subprocess.check_output(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+        cwd=ROOT,
+    )
+    candidates = [item.decode("utf-8") for item in output.split(b"\0") if item]
+    tracked = [path for path in candidates if (ROOT / path).is_file()]
     inventory = build_inventory(ROOT, load_allowlist(ALLOWLIST), tracked)
     return {str(row["path"]) for row in inventory["files"]}
 
@@ -66,7 +70,7 @@ def test_public_documentation_has_one_current_start_path() -> None:
         "SELECTIVE KV ACQUISITION",
         "SEALED BUNDLES",
         "FRESH-CONTEXT REHOSTING",
-        "Official repository for the DFC EU 2027 submission",
+        "Official repository for the DFC Europe 2027 submission",
     ):
         assert f'alt="{label}"' in readme
     assert readme.count("style=flat-square") == 10
@@ -85,7 +89,7 @@ def test_public_documentation_has_one_current_start_path() -> None:
         readme,
     )
     assert (
-        "DFC_EU_2027-OFFICIAL_SUBMISSION_REPOSITORY-f59e0b?style=flat-square"
+        "DFC_Europe_2027-OFFICIAL_SUBMISSION_REPOSITORY-f59e0b?style=flat-square"
         in readme
     )
     assert "## Getting started" in readme
@@ -110,7 +114,7 @@ def test_public_markdown_local_links_resolve_inside_the_release() -> None:
             if target.startswith(("https://", "http://", "#")):
                 continue
             path_text = target.split("#", 1)[0]
-            if path_text and not (document.parent / path_text).resolve().is_file():
+            if path_text and not (document.parent / path_text).resolve().exists():
                 unresolved.append(f"{relative}: {target}")
     assert unresolved == []
 

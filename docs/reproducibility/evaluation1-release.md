@@ -1,5 +1,13 @@
 # Reproducing Evaluation1 from the public KV release
 
+The current public implementation has completed an end-to-end rehosting smoke for
+both evidence paths using the published `C1` / `U01` / `R01` selector. Each run
+materialized its sealed bundle, restored the KV state, issued a fresh inquiry, and
+matched the expected synthetic recall record exactly. The response text and local
+machine paths are intentionally omitted from the tracked
+[`evaluation1-public-rehost-smoke.json`](../../evaluation/run_records/evaluation1-public-rehost-smoke.json)
+receipt.
+
 This guide defines the public artifact boundary and the exact replay protocol for the
 paper's attribution-accuracy and cross-user non-mixing evaluation. The release contains
 current LARIS code and externally hosted KV artifacts; it does not restore or depend on
@@ -7,7 +15,11 @@ the removed legacy checkpoint implementation.
 
 Verified small metadata is tracked at
 `evaluation/publication/releases/evaluation1-release-v1`. The downloaded external
-files belong at the ignored path
+release may be kept anywhere outside the repository. The new-machine setup guide uses
+`C:\LARIS-Evaluation1-Public-v1` as an example and resolves the actual release under
+`LARIS_Evaluation\evaluation1-release-v1`; see
+[`docs/REHOSTING_SETUP.md`](../REHOSTING_SETUP.md). Repository maintainers may instead
+stage the same verified files at the ignored development path
 `evaluation/publication/external/evaluation1-release-v1`.
 
 ## Artifact boundary
@@ -111,8 +123,8 @@ Tool: <exact value or Unknown>
 Route: <exact value or Unknown>
 ```
 
-Published replay defaults are temperature `0`, top-k `1`, top-p `1.0`, min-p `0`, seed
-`0`, and a 128-token generation upper bound. A custom question file may be supplied
+Published replay defaults are temperature `1.0`, top-k `1`, top-p `1.0`, min-p `1.0`, seed
+`20260907`, and a 128-token generation upper bound. A custom question file may be supplied
 instead; such output is a qualitative replay and is not scored as the published recall
 trial. Published exact-value answers are keyed by the complete
 `(checkpoint_id, public_user_ref, record_id)` tuple; the verifier never reuses one
@@ -166,17 +178,45 @@ The underlying verifier can also be invoked directly after staging:
 python evaluation/scripts/verify_public_evaluation_release.py --release-root evaluation/publication/external/evaluation1-release-v1 --locations evaluation/publication/releases/evaluation1-release-v1/artifact-locations.json
 ```
 
+The example below uses the published Llama model ID. On a new PC, copy the concrete
+path printed as `LARIS_PUBLIC_RELEASE_ROOT` by `setup_public_rehost.ps1`. A maintainer
+who staged the files inside the repository may use the ignored development path shown
+below. In PowerShell, define the concrete local paths once:
+
+```powershell
+$releaseRoot = 'evaluation/publication/external/evaluation1-release-v1'
+$modelId = 'llama-3.2-3b-instruct-q4-k-m'
+$profile = Join-Path $env:APPDATA 'LARIS\rehost-profile.json'
+$analysisRoot = Join-Path $env:APPDATA 'LARIS\analyses'
+```
+
+Here, `U01` is a publication-safe alias, not itself a HMAC or a production identity.
+For Proxy, the alias selects the synthetic authenticated user or service-account
+identifier; for Log-linked, it selects the synthetic endpoint type and IP address.
+The resolver combines that mode-specific identity evidence with the corresponding
+preservation key, recomputes the HMAC reference, and requires an exact match with the
+sealed bundle index before materialization. This is the public reproduction form of
+the identity-selection procedure described in the paper.
+
+The rehosting runtime must be built against llama.cpp commit
+`daf6bc9f2d3516d7bda73d191c6a01388aff09c5` and conform to
+[`configs/runtime/runtime_state_observer/x86_64_cpu_simple_kv.json`](../../configs/runtime/runtime_state_observer/x86_64_cpu_simple_kv.json).
+Exact Llama and Qwen model artifacts and digests are pinned in
+[`evaluation/experiment_setup/models.yaml`](../../evaluation/experiment_setup/models.yaml).
+The default profile path is local and host-specific; it is intentionally not published
+as a transferable artifact.
+
 List or inspect the 60 tuples for one model/mode:
 
 ```text
-laris reproduce evaluation1 list --release-root RELEASE_ROOT --model-id MODEL_ID --mode PROXY
-laris reproduce evaluation1 show --release-root RELEASE_ROOT --model-id MODEL_ID --mode PROXY --checkpoint-id C1 --user-ref U01
+laris reproduce evaluation1 list --release-root $releaseRoot --model-id $modelId --mode PROXY
+laris reproduce evaluation1 show --release-root $releaseRoot --model-id $modelId --mode PROXY --checkpoint-id C1 --user-ref U01
 ```
 
 Replay one published question:
 
 ```text
-laris reproduce evaluation1 rehost --release-root RELEASE_ROOT --model-id MODEL_ID --mode PROXY --checkpoint-id C1 --user-ref U01 --record-id R01 --profile PROFILE_JSON --analysis-root ANALYSIS_ROOT --json
+laris reproduce evaluation1 rehost --release-root $releaseRoot --model-id $modelId --mode PROXY --checkpoint-id C1 --user-ref U01 --record-id R01 --profile $profile --analysis-root $analysisRoot --json
 ```
 
 For Log-linked, change `--mode PROXY` to `--mode LOG_LINKED`; the resolver supplies the
@@ -187,7 +227,7 @@ Save the response and verify the published exact-value oracle without printing s
 values into the receipt:
 
 ```text
-laris reproduce evaluation1 verify-recall --release-root RELEASE_ROOT --model-id MODEL_ID --mode PROXY --checkpoint-id C1 --user-ref U01 --record-id R01 --response-file response.txt
+laris reproduce evaluation1 verify-recall --release-root $releaseRoot --model-id $modelId --mode PROXY --checkpoint-id C1 --user-ref U01 --record-id R01 --response-file response.txt
 ```
 
 The command emits canonical JSON containing only the match result and answer/response

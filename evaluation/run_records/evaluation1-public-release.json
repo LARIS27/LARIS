@@ -3,9 +3,9 @@
   "release_id": "evaluation1-release-v1",
   "source_evaluation": "Evaluation1",
   "publication_status": "PUBLISHED",
-  "artifact_locations_sha256": "sha256:6af51c922a308c0fadca28c53b2fe520bb8b14b01042e8667efce583e24d8ceb",
+  "artifact_locations_sha256": "sha256:957c94c47a04847f84189071fcc68d63aa02f0331e97832e59df17c96d1cf914",
   "publication_boundary": {
-    "external_release_size_bytes": 13242821929,
+    "external_release_size_bytes": 13242821933,
     "file_count": 14,
     "model_weights_included": false,
     "payload_count": 240
@@ -67,7 +67,7 @@
   "release_files": [
     {
       "path": "checksums.sha256",
-      "sha256": "sha256:e46a62557f6e7394c4a9129fcc5cab6682360c69f59aa108527fd0d785dd9662",
+      "sha256": "sha256:0624eab13c68ea59c49dd71454f193a7b9274f663c3eb93060ab4231c7ee0293",
       "size_bytes": 1314
     },
     {
@@ -77,8 +77,8 @@
     },
     {
       "path": "shared-data.tar.gz",
-      "sha256": "sha256:314fdcce2249523ec713a428ca49262bb7219629f23a670bcb231208926f378a",
-      "size_bytes": 17817
+      "sha256": "sha256:7ae3d596e8983104d32d1a13aa721b2a83a58dd294bcb2e9d6450eabd48eaccf",
+      "size_bytes": 17821
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",

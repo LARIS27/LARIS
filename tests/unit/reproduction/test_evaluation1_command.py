@@ -6,9 +6,11 @@ import json
 import tarfile
 from argparse import Namespace
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+import laris_onpremise.reproduction.evaluation1.command as evaluation1_command
 from laris_onpremise.attribution.log_linked.endpoint import derive_endpoint_ref
 from laris_onpremise.core.records import IdentityKey, IdentityKeyRegistry, derive_user_hmac
 from laris_onpremise.reproduction.evaluation1.archive import sha256_file, write_deterministic_tar
@@ -20,6 +22,7 @@ from laris_onpremise.reproduction.evaluation1.resolver import (
 
 
 MODEL_ID = "llama-3.2-3b-instruct-q4-k-m"
+RUN_ID = "run-evaluation1-public-test"
 
 
 def _release(tmp_path: Path) -> Path:
@@ -179,7 +182,11 @@ def _release(tmp_path: Path) -> Path:
                 ]
             },
             "questions.jsonl": [
-                {"checkpoint_id": "C1", "record_id": "R01", "question": "Where was the item?"}
+                {
+                    "checkpoint_id": "C1",
+                    "record_id": "R01",
+                    "question": "Where was the item?\nAnswer using retained fields.\n",
+                }
             ],
             "oracle.jsonl": [
                 {
@@ -325,16 +332,27 @@ def test_archive_digest_is_checked_before_rehost_delegation(tmp_path: Path) -> N
         )
 
 
-def test_rehost_forwards_current_open_arguments(tmp_path: Path) -> None:
+def test_rehost_forwards_current_open_arguments(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     root = _release(tmp_path)
     question = tmp_path / "question.txt"
     question.write_text("Where was the item?", encoding="utf-8")
     captured: list[Namespace] = []
+    monkeypatch.setattr(
+        evaluation1_command.PortableBundleCatalog,
+        "open",
+        lambda _root: SimpleNamespace(source_run_id=RUN_ID),
+    )
 
     def delegate(arguments: Namespace) -> int:
         captured.append(arguments)
         assert arguments.bundle_root.is_dir()
+        assert arguments.bundle_root.parent.name == RUN_ID
+        assert arguments.bundle_root.name == "bundle"
         assert arguments.subject_id_file.read_text(encoding="utf-8") == "synthetic-subject-U01"
+        assert arguments.question_file.read_text(encoding="utf-8") == "Where was the item?"
         return 0
 
     result = evaluation1_main(
@@ -361,3 +379,49 @@ def test_rehost_forwards_current_open_arguments(tmp_path: Path) -> None:
     assert result == 0
     assert captured[0].endpoint_ref is None
     assert captured[0].session_ref == "session-1-U01"
+    assert captured[0].temperature == 1.0
+    assert captured[0].top_k == 1
+    assert captured[0].top_p == 1.0
+    assert captured[0].min_p == 1.0
+    assert captured[0].seed == 20260907
+
+
+def test_rehost_record_removes_only_terminal_line_endings_from_published_question(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = _release(tmp_path)
+    monkeypatch.setattr(
+        evaluation1_command.PortableBundleCatalog,
+        "open",
+        lambda _root: SimpleNamespace(source_run_id=RUN_ID),
+    )
+
+    def delegate(arguments: Namespace) -> int:
+        assert arguments.bundle_root.parent.name == RUN_ID
+        assert arguments.bundle_root.name == "bundle"
+        assert arguments.question_file.read_text(encoding="utf-8") == (
+            "Where was the item?\nAnswer using retained fields."
+        )
+        return 0
+
+    assert evaluation1_main(
+        [
+            "rehost",
+            "--release-root",
+            str(root),
+            "--model-id",
+            MODEL_ID,
+            "--mode",
+            "PROXY",
+            "--checkpoint-id",
+            "C1",
+            "--user-ref",
+            "U01",
+            "--record-id",
+            "R01",
+            "--profile",
+            str(tmp_path / "profile.yaml"),
+        ],
+        rehost_runner=delegate,
+    ) == 0
