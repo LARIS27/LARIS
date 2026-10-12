@@ -37,7 +37,6 @@ roles:
   - native/rehosting/**
 - name: current-operations
   include:
-  - configs/rehosting/**
   - configs/runtime/llama_server/*.toml
   - configs/runtime/log_linked/*.yaml
   - configs/runtime/runtime_state_observer/*.json
@@ -84,8 +83,6 @@ roles:
   - evaluation/results/attribution-accuracy-and-cross-user-isolation/**
   - evaluation/results/log-linked-correlation/**
   - evaluation/results/runtime-overhead/**
-  - evaluation/run_records/evaluation1-public-release.json
-  - evaluation/run_records/evaluation1-public-rehost-smoke.json
   exclude:
   - evaluation/publication/external/**
   - evaluation/publication/generated/**
@@ -123,6 +120,7 @@ deny:
   - .local-release/
   - .release-staging/
   - .worktrees/
+  - evaluation/run_records/
   - dashboard/
   - evaluation/scripts/e6_legacy_support/
   - configs/runtime/runtime_observer/

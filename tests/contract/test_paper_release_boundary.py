@@ -58,7 +58,6 @@ def test_allowlist_assigns_role_complete_current_source() -> None:
     assert paths["evaluation/scripts/stage_public_evaluation_release.py"] == "evaluation1-reproduction"
     assert paths["evaluation/results/runtime-overhead/llama-3.2-3b/summary.json"] == "public-evaluation"
     assert paths["evaluation/results/log-linked-correlation/README.md"] == "public-evaluation"
-    assert paths["evaluation/run_records/evaluation1-public-rehost-smoke.json"] == "public-evaluation"
     assert paths["docs/reproducibility/evaluation1-release.md"] == "public-docs"
 
 
@@ -84,6 +83,7 @@ def test_final_inventory_excludes_frozen_evaluation_backends_and_task_metadata()
         ".local-evaluation/",
         ".release-staging/",
         ".worktrees/",
+        "evaluation/run_records/",
     )
     assert all(not any(fragment in path for fragment in forbidden_fragments) for path in paths)
 
@@ -133,6 +133,19 @@ def test_final_inventory_includes_current_config_and_reproduction_tools() -> Non
         "tools/wsl/install_rehost_runtime.sh",
     }
     assert required <= paths
+
+
+def test_retired_rehosting_prompt_fixtures_are_not_public_source() -> None:
+    paths = set(_tracked_paths())
+    assert all(not path.startswith("configs/rehosting/") for path in paths)
+
+    document = yaml.safe_load(ALLOWLIST.read_text(encoding="utf-8"))
+    includes = {
+        pattern
+        for role in document["roles"]
+        for pattern in role.get("include", [])
+    }
+    assert "configs/rehosting/**" not in includes
 
 
 def test_final_inventory_excludes_repository_host_automation() -> None:

@@ -13,7 +13,6 @@ archives are outside Git.
 | [`experiment_setup/`](experiment_setup/) | Evaluation protocols, schedules, and fixed inputs |
 | [`publication/`](publication/) | Public-release metadata, checksums, licenses, and external-bundle layout |
 | [`results/`](results/) | Evaluation summaries, machine-readable results, and figure source records |
-| [`run_records/`](run_records/) | Sanitized receipts from verified publication and replay runs |
 | [`scripts/`](scripts/) | Public result-verification and reproduction utilities |
 
 Within `results/`,
@@ -59,11 +58,6 @@ Verified small metadata is tracked at
 belong under the ignored path
 `evaluation/publication/external/evaluation1-release-v1` and must pass the documented
 offline size and SHA-256 checks before use.
-
-The current public rehosting path was also exercised end to end for one Proxy bundle
-and one Log-linked bundle, including a fresh inquiry and exact recall check. The
-sanitized receipt is tracked at
-`evaluation/run_records/evaluation1-public-rehost-smoke.json`.
 
 ## Evaluation2: runtime overhead
 

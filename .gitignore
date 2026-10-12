@@ -22,6 +22,7 @@ __pycache__/
 /evaluation/publication/*.tar
 /evaluation/publication/*.tar.gz
 /evaluation/publication/source-inventory.json
+/evaluation/run_records/
 
 # Root-only short test workspaces. Anchoring prevents source packages from
 # being hidden when they happen to use similar names below src/tests/tools.

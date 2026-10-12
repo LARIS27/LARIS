@@ -15,7 +15,7 @@ def test_new_machine_rehost_setup_has_a_bounded_public_path() -> None:
     powershell = _text("tools/windows/setup_public_rehost.ps1")
     shell = _text("tools/wsl/setup_public_rehost_runtime.sh")
 
-    assert "C:\\LARIS-Evaluation1-Public-v1" in guide
+    assert "C:\\LARIS-Evaluation1\\evaluation1-release-v1" in guide
     assert "LARIS_Evaluation\\evaluation1-release-v1" in guide
     assert "D:\\" not in guide
     assert "rehosting only" in guide.lower()

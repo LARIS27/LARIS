@@ -9,11 +9,18 @@ models:
   quantization: Q4_K_M
   artifact_sha256: sha256:880881ac5b02b5bcb449010a1d6cfad09913c421fb78efa8b2aa6a2458b10f6e
   artifact_size_bytes: 2019377600
-  source_artifacts:
-  - filename: Llama-3.2-3B-Instruct-Q4_K_M.gguf
-    sha256: sha256:880881ac5b02b5bcb449010a1d6cfad09913c421fb78efa8b2aa6a2458b10f6e
-    size_bytes: 2019377600
-  artifact_derivation: NONE
+  source_snapshot:
+    format: HUGGING_FACE_SAFETENSORS
+    manifest_sha256: sha256:d3decedc83cddb3ae34f561c4284368c34778b142c60fc26a8248905ffa06473
+  artifact_derivation: LLAMA_CPP_BF16_THEN_Q4_K_M
+  derivation:
+    llama_cpp_revision: daf6bc9f2d3516d7bda73d191c6a01388aff09c5
+    converter: convert_hf_to_gguf.py
+    intermediate_format: GGUF_BF16
+    intermediate_sha256: sha256:c33e9df3cb12e4b4656c624d16e14fff6e499eef097b3074c38bf1bb3ea9fc38
+    quantizer: llama-quantize
+    quantizer_sha256: sha256:198073827fd97658ff3442b278d6396a8e6710975b37064ac8b90fd2f0fb5acc
+    quantization: Q4_K_M
 - model_id: qwen2.5-7b-instruct-q4-k-m
   source_repository: Qwen/Qwen2.5-7B-Instruct-GGUF
   source_revision: bb5d59e06d9551d752d08b292a50eb208b07ab1f

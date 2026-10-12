@@ -3,8 +3,8 @@
 This file records only the model notices needed to identify the evaluated artifacts and
 to construct a reviewed external release. LARIS source code has its own repository
 license. Model weights are not redistributed by this repository, release, or Git branch.
-Users obtain the models from the pinned upstream sources and verify the recorded
-artifact digests in `evaluation/experiment_setup/models.yaml`.
+Users obtain the pinned upstream inputs, derive an evaluated artifact where recorded,
+and verify each resulting artifact digest against `evaluation/experiment_setup/models.yaml`.
 
 KV state is treated conservatively as a model-derived artifact. The packager therefore
 requires a separate human `PUBLIC_APPROVED` decision for each model before it will create

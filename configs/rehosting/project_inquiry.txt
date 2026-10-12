@@ -1,1 +1,0 @@
-What exact one-word synthetic project name did the user provide earlier? Answer with the project name only.

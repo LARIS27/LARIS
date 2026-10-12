@@ -9,7 +9,7 @@ data archive, and two synthetic fixture keys. It does not contain model weights.
 [`artifact-locations.json`](artifact-locations.json) records the exact relative path,
 byte size, SHA-256 digest, and file-specific public download URL of every external
 file. The complete published directory is available from the
-[Evaluation1 release folder](https://drive.google.com/drive/folders/1l_bvv0qQeiRossWd9HysLevyXwSn8HE2?usp=sharing).
+[Evaluation1 release folder](https://drive.google.com/drive/folders/1z8zVZXxhqt303Fl_yQ19Y7FQHe7CtVBU?usp=sharing).
 
 [`release-manifest.json`](release-manifest.json) fixes the bundle inventory, model and
 capture-mode association, archive and index digests, bundle counts, source revisions,

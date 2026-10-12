@@ -5,6 +5,8 @@ import json
 import subprocess
 from pathlib import Path
 
+import yaml
+
 
 ROOT = Path(__file__).resolve().parents[2]
 EVALUATION_PAGE = ROOT / "evaluation" / "README.md"
@@ -39,14 +41,10 @@ SUMMARY = (
     / "llama-3.2-3b"
     / "summary.json"
 )
-PUBLIC_RELEASE_RECEIPT = (
-    ROOT / "evaluation" / "run_records" / "evaluation1-public-release.json"
-)
-PUBLIC_REHOST_SMOKE = (
-    ROOT / "evaluation" / "run_records" / "evaluation1-public-rehost-smoke.json"
-)
 ROOT_README = ROOT / "README.md"
 QUICKSTART = ROOT / "docs" / "QUICKSTART.md"
+REHOSTING_SETUP = ROOT / "docs" / "REHOSTING_SETUP.md"
+MODEL_REGISTRY = ROOT / "evaluation" / "experiment_setup" / "models.yaml"
 RELEASE_TEMPLATE = (
     ROOT / "evaluation" / "publication" / "releases" / "evaluation1-release-v1"
 )
@@ -62,7 +60,6 @@ def test_evaluation_page_links_complete_publication_contract() -> None:
         "experiment_setup/",
         "publication/",
         "results/",
-        "run_records/",
         "scripts/",
     ):
         assert f"]({directory})" in page
@@ -200,38 +197,6 @@ def test_public_docs_do_not_publish_local_rehost_profile_debt() -> None:
         assert stale_marker not in combined
 
 
-def test_public_rehost_smoke_covers_both_evidence_paths_without_private_output() -> None:
-    receipt = json.loads(_text(PUBLIC_REHOST_SMOKE))
-    guide = _text(REPRODUCTION_GUIDE)
-
-    assert receipt["state"] == "COMPLETE"
-    assert receipt["selector"] == {
-        "checkpoint_id": "C1",
-        "model_id": "llama-3.2-3b-instruct-q4-k-m",
-        "record_id": "R01",
-        "user_ref": "U01",
-    }
-    cases = {item["mode"]: item for item in receipt["cases"]}
-    assert set(cases) == {"PROXY", "LOG_LINKED"}
-    for case in cases.values():
-        assert case["status"] == "COMPLETE"
-        assert case["exact_recall"]["match"] is True
-        assert case["exact_recall"]["expected_sha256"] == case["exact_recall"][
-            "response_sha256"
-        ]
-
-    serialized = json.dumps(receipt, sort_keys=True).lower()
-    assert "response\"" not in serialized
-    assert "c:\\users" not in serialized
-    assert "/home/" not in serialized
-    assert "evaluation1-public-rehost-smoke.json" in guide
-    normalized_guide = " ".join(guide.split())
-    assert (
-        "temperature `1.0`, top-k `1`, top-p `1.0`, min-p `1.0`, seed `20260907`"
-        in normalized_guide
-    )
-
-
 def test_public_entry_points_match_the_paper_identity_and_remain_anonymous() -> None:
     readme = _text(ROOT_README)
     quickstart = _text(QUICKSTART)
@@ -264,6 +229,10 @@ def test_evaluation_page_displays_only_required_model_notices() -> None:
 
 def test_reproduction_guide_publishes_exact_checkpoint_and_question_contract() -> None:
     guide = _text(REPRODUCTION_GUIDE)
+    assert (
+        "temperature `1.0`, top-k `1`, top-p `1.0`, min-p `1.0`, seed `20260907`"
+        in " ".join(guide.split())
+    )
     expected = {
         "C1": "R01–R03",
         "C2": "R04–R06",
@@ -311,6 +280,45 @@ def test_model_revisions_and_only_needed_notices_are_published() -> None:
     assert not QWEN_NOTICE.exists()
     assert "model weights" in licenses.lower()
     assert "not redistributed" in licenses
+
+
+def test_llama_gguf_derivation_is_explicitly_published() -> None:
+    document = yaml.safe_load(MODEL_REGISTRY.read_text(encoding="utf-8"))
+    llama = next(
+        model
+        for model in document["models"]
+        if model["model_id"] == "llama-3.2-3b-instruct-q4-k-m"
+    )
+
+    assert llama["source_repository"] == "meta-llama/Llama-3.2-3B-Instruct"
+    assert llama["source_revision"] == "0cb88a4f764b7a12671c53f0838cd831a0843b95"
+    assert llama["source_snapshot"]["format"] == "HUGGING_FACE_SAFETENSORS"
+    assert llama["source_snapshot"]["manifest_sha256"] == (
+        "sha256:d3decedc83cddb3ae34f561c4284368c34778b142c60fc26a8248905ffa06473"
+    )
+    assert llama["artifact_derivation"] == "LLAMA_CPP_BF16_THEN_Q4_K_M"
+    derivation = llama["derivation"]
+    assert derivation["llama_cpp_revision"] == (
+        "daf6bc9f2d3516d7bda73d191c6a01388aff09c5"
+    )
+    assert derivation["converter"] == "convert_hf_to_gguf.py"
+    assert derivation["intermediate_format"] == "GGUF_BF16"
+    assert derivation["intermediate_sha256"] == (
+        "sha256:c33e9df3cb12e4b4656c624d16e14fff6e499eef097b3074c38bf1bb3ea9fc38"
+    )
+    assert derivation["quantizer"] == "llama-quantize"
+    assert derivation["quantizer_sha256"] == (
+        "sha256:198073827fd97658ff3442b278d6396a8e6710975b37064ac8b90fd2f0fb5acc"
+    )
+    assert derivation["quantization"] == "Q4_K_M"
+
+    setup = " ".join(_text(REHOSTING_SETUP).split())
+    assert "not distributed as GGUF by the pinned Meta repository" in setup
+    assert "convert_hf_to_gguf.py" in setup
+    assert "llama-quantize" in setup
+    assert "Q4_K_M" in setup
+    licenses = " ".join(_text(LICENSE_PAGE).split())
+    assert "derive an evaluated artifact where recorded" in licenses
 
 
 def test_overhead_page_is_bound_to_completed_machine_summary() -> None:
@@ -428,40 +436,6 @@ def test_accuracy_comparison_points_to_replay_guide_without_changing_results() -
     assert "876/900 (97.33%)" in comparison
 
 
-def test_public_release_receipt_is_sanitized_and_complete() -> None:
-    raw = _text(PUBLIC_RELEASE_RECEIPT)
-    receipt = json.loads(raw)
-    assert receipt["release_id"] == "evaluation1-release-v1"
-    assert receipt["publication_boundary"] == {
-        "external_release_size_bytes": 13242821933,
-        "file_count": 14,
-        "model_weights_included": False,
-        "payload_count": 240,
-    }
-    assert receipt["verification"] == {
-        "independent_verifier": "VERIFIED",
-        "materialize_smoke_cases": 4,
-        "materialize_smoke_status": "VERIFIED",
-        "packager_verification": "VERIFIED",
-    }
-    assert {
-        (artifact["model_id"], artifact["mode"], artifact["bundle_count"])
-        for artifact in receipt["artifacts"]
-    } == {
-        ("llama-3.2-3b-instruct-q4-k-m", "PROXY", 60),
-        ("llama-3.2-3b-instruct-q4-k-m", "LOG_LINKED", 60),
-        ("qwen2.5-7b-instruct-q4-k-m", "PROXY", 60),
-        ("qwen2.5-7b-instruct-q4-k-m", "LOG_LINKED", 60),
-    }
-    assert {key["key_id"] for key in receipt["fixture_keys"]} == {
-        "identity-epoch-20260915-5f0d02cf",
-        "paper-eval-correlation-v1",
-    }
-    assert "C:\\Users\\" not in raw
-    assert "D:\\" not in raw
-    assert "private_seed" not in raw
-
-
 def test_tracked_release_template_contains_only_verified_small_metadata() -> None:
     expected = {
         "checksums.sha256": "0624eab13c68ea59c49dd71454f193a7b9274f663c3eb93060ab4231c7ee0293",
@@ -480,16 +454,6 @@ def test_tracked_release_template_contains_only_verified_small_metadata() -> Non
     assert not (RELEASE_TEMPLATE / "models").exists()
     assert not (RELEASE_TEMPLATE / "shared-data.tar.gz").exists()
     assert not (RELEASE_TEMPLATE / "fixtures" / "keys").exists()
-
-
-def test_public_release_receipt_binds_published_location_manifest() -> None:
-    receipt = json.loads(PUBLIC_RELEASE_RECEIPT.read_text(encoding="utf-8"))
-    location_path = RELEASE_TEMPLATE / "artifact-locations.json"
-
-    assert receipt["publication_status"] == "PUBLISHED"
-    assert receipt["artifact_locations_sha256"] == (
-        "sha256:" + hashlib.sha256(location_path.read_bytes()).hexdigest()
-    )
 
 
 def test_verified_release_metadata_keeps_lf_bytes_on_checkout() -> None:

@@ -13,10 +13,10 @@ not qualify the PC for live Proxy or Log-linked capture.
    ```text
    python -m pip install -e .
    ```
-2. Download the complete `LARIS-Evaluation1-Public-v1` folder. This guide uses
-   `C:\LARIS-Evaluation1-Public-v1` as an example; any local path is accepted.
-   The setup command accepts the downloaded `evaluation1-release-v1` directory
-   itself, its immediate parent, or a wrapper folder containing
+2. Download the complete public `evaluation1-release-v1` folder. This guide uses
+   `C:\LARIS-Evaluation1\evaluation1-release-v1` as an example; any local path is
+   accepted. The setup command accepts the downloaded release directory itself or
+   its immediate parent. For compatibility, it also recognizes a wrapper containing
    `LARIS_Evaluation\evaluation1-release-v1`.
 3. Install WSL 2 with an Ubuntu distribution and the packages `build-essential`,
    `cmake`, `git`, `python3`, and `python3-venv`.
@@ -32,13 +32,44 @@ Model weights are not part of the public KV release. The Llama and Qwen notices 
 govern the upstream models and the synthetic release are recorded in
 `evaluation/publication/LICENSES.md`.
 
+### Llama model derivation
+
+The evaluated `Llama-3.2-3B-Instruct-Q4_K_M.gguf` is not distributed as GGUF by the
+pinned Meta repository. It was derived locally from the gated Hugging Face
+Safetensors snapshot at revision `0cb88a4f764b7a12671c53f0838cd831a0843b95`.
+Using llama.cpp revision `daf6bc9f2d3516d7bda73d191c6a01388aff09c5`, the snapshot
+was first converted to BF16 GGUF with `convert_hf_to_gguf.py` and then quantized to
+`Q4_K_M` with `llama-quantize`. The source-manifest, BF16 intermediate, quantizer,
+and final artifact digests are recorded in `evaluation/experiment_setup/models.yaml`.
+A reconstructed model is accepted for replay only when its final byte size and
+SHA-256 digest match that registry.
+
+A minimal reconstruction is:
+
+1. Download the gated Meta Safetensors snapshot at the revision above.
+2. Check out the pinned llama.cpp revision and build its `llama-quantize` target.
+3. Convert the snapshot to BF16 GGUF, then quantize that intermediate to `Q4_K_M`:
+
+   ```sh
+   python <llama.cpp>/convert_hf_to_gguf.py <snapshot-dir> \
+     --outfile <llama-bf16.gguf> --outtype bf16
+   <llama.cpp-build>/bin/llama-quantize \
+     <llama-bf16.gguf> <Llama-3.2-3B-Instruct-Q4_K_M.gguf> Q4_K_M
+   sha256sum <llama-bf16.gguf> <llama.cpp-build>/bin/llama-quantize \
+     <Llama-3.2-3B-Instruct-Q4_K_M.gguf>
+   ```
+
+Replace the angle-bracketed paths with local paths and compare all reported digests,
+as well as the final file size, with `evaluation/experiment_setup/models.yaml`. Do not
+use a reconstructed model for public-bundle replay when the final identity differs.
+
 ## One-command preparation
 
 From PowerShell in the repository root:
 
 ```powershell
 .\tools\windows\setup_public_rehost.ps1 `
-  -DownloadRoot 'C:\LARIS-Evaluation1-Public-v1' `
+  -DownloadRoot 'C:\LARIS-Evaluation1\evaluation1-release-v1' `
   -ModelRoot 'C:\Models\LARIS' `
   -LlamaSource 'C:\src\llama.cpp' `
   -Distribution 'Ubuntu'

@@ -1,13 +1,5 @@
 # Reproducing Evaluation1 from the public KV release
 
-The current public implementation has completed an end-to-end rehosting smoke for
-both evidence paths using the published `C1` / `U01` / `R01` selector. Each run
-materialized its sealed bundle, restored the KV state, issued a fresh inquiry, and
-matched the expected synthetic recall record exactly. The response text and local
-machine paths are intentionally omitted from the tracked
-[`evaluation1-public-rehost-smoke.json`](../../evaluation/run_records/evaluation1-public-rehost-smoke.json)
-receipt.
-
 This guide defines the public artifact boundary and the exact replay protocol for the
 paper's attribution-accuracy and cross-user non-mixing evaluation. The release contains
 current LARIS code and externally hosted KV artifacts; it does not restore or depend on
@@ -16,8 +8,8 @@ the removed legacy checkpoint implementation.
 Verified small metadata is tracked at
 `evaluation/publication/releases/evaluation1-release-v1`. The downloaded external
 release may be kept anywhere outside the repository. The new-machine setup guide uses
-`C:\LARIS-Evaluation1-Public-v1` as an example and resolves the actual release under
-`LARIS_Evaluation\evaluation1-release-v1`; see
+`C:\LARIS-Evaluation1\evaluation1-release-v1` as an example and passes that downloaded
+release directory directly; see
 [`docs/REHOSTING_SETUP.md`](../REHOSTING_SETUP.md). Repository maintainers may instead
 stage the same verified files at the ignored development path
 `evaluation/publication/external/evaluation1-release-v1`.
@@ -233,6 +225,3 @@ laris reproduce evaluation1 verify-recall --release-root $releaseRoot --model-id
 The command emits canonical JSON containing only the match result and answer/response
 digests. The aggregate paper results remain in
 [`evaluation/results/attribution-accuracy-and-cross-user-isolation/comparison.md`](../../evaluation/results/attribution-accuracy-and-cross-user-isolation/comparison.md).
-The sanitized manifest and digest receipt for the external artifact is checked in as
-[`evaluation/run_records/evaluation1-public-release.json`](../../evaluation/run_records/evaluation1-public-release.json);
-it contains no local path or fixture key bytes.
